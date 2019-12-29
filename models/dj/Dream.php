@@ -66,4 +66,19 @@ class Dream extends \yii\db\ActiveRecord
     {
         return new DreamQuery(get_called_class());
     }
+
+    public function getId(): string
+	{
+		return $this->id;
+	}
+
+	public function getTitle(): string
+	{
+		return $this->title;
+	}
+
+    public function getFormattedDate(): string
+	{
+		return Yii::$app->getFormatter()->asDate($this->dreamt_at);
+	}
 }

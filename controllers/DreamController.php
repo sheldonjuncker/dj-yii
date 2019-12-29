@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
 use Yii;
@@ -29,13 +30,21 @@ class DreamController extends BaseController
         ];
     }
 
-    /**
+    public function beforeAction($action)
+	{
+		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
+
+		return parent::beforeAction($action);
+	}
+
+	/**
      * Lists all Dream models.
      * @return mixed
      */
     public function actionIndex()
     {
-		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
+		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
 
 		//Register scripts needed for dreams
 		$this->getScriptRegistrar()->registerScript(
@@ -46,9 +55,27 @@ class DreamController extends BaseController
 		);
 
 
-    	$dreams = Dream::findAll('1 = 1');
+    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->all();
+
+		$dreamsByDay = [];
+
+		if(count($dreams))
+		{
+			$currentDay = $dreams[0]->getFormattedDate() ?? '';
+			foreach($dreams as $dream)
+			{
+				$dreamDay = $dream->getFormattedDate();
+				if($dreamDay != $currentDay)
+				{
+					$currentDay = $dreamDay;
+					$dreamsByDay[] = NULL;
+				}
+				$dreamsByDay[] = $dream;
+			}
+		}
+
         return $this->render('index', [
-            'dreams' => $dreams
+            'dreams' => $dreamsByDay
         ]);
     }
 

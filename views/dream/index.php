@@ -22,8 +22,15 @@
 
 	<ol class="list-group list-group-activity">
         <?php
-        foreach($dreams as $dream)
+        /** @var \app\models\dj\Dream[] $dreams */
+		foreach($dreams as $dream)
         {
+            if(!$dream)
+            {
+                echo '<hr>';
+                continue;
+            }
+
             ?>
             <li class="list-group-item">
                 <div class="media align-items-center">
@@ -36,7 +43,7 @@
                     </ul>
                     <div class="media-body">
                         <div>
-                            <a href="/dream/show/<?=$dream->getId()?>" class="A-filter-by-text"><?=$dream->getTitle()?>}</a>
+                            <a href="/dream/show/<?=$dream->getId()?>" class="A-filter-by-text"><?=$dream->getTitle()?></a>
                         </div>
                         <span class="text-small"><?=$dream->getFormattedDate()?></span>
                     </div>

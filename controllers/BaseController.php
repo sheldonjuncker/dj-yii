@@ -12,9 +12,6 @@ use yii\web\Controller;
 
 class BaseController extends Controller
 {
-	public $layout = 'test';
-
-
 	/** @var ActionItem[] $actionItems */
 	protected $actionItems = NULL;
 

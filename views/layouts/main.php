@@ -1,81 +1,87 @@
 <?php
+use yii\helpers\Html;
 
-/* @var $this \yii\web\View */
+/* @var $this yii\web\View */
 /* @var $content string */
 
-use app\widgets\Alert;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
+//Fill these things in later from the base controller
+$headerScripts = $this->params['headerScripts'] ?? [];
+$bodyScripts = $this->params['bodyScripts'] ?? [];
+$breadcrumbs = $this->params['breadcrumbs'] ?? [];
+$actionItems = $this->params['actionItems'] ?? [];
 
-AppAsset::register($this);
+$this->beginPage()
 ?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<!-- Start of Header -->
+<!doctype html>
+<html lang="en">
+
 <head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A project management Bootstrap theme by Medium Rare">
+	<link href="/dist/assets/img/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+	<link href="/dist/assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="/dist/assets/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+
+	<?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+	<?php $this->head() ?>
+
+    <?php
+    foreach($headerScripts as $script)
+    {
+		echo $script->render();
+    }
+    ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
+<!-- End of Header-->
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    ?>
-
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+<div class="layout layout-nav-side">
+	<?php echo $this->renderFile('@app/views/layouts/left-navbar.php'); ?>
+	<div class="main-container">
+		<div class="breadcrumb-bar navbar bg-white sticky-top">
+			<div class="col-lg-9">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+                        <?php
+						foreach($breadcrumbs as $breadcrumb)
+						{
+						    echo '<li class="breadcrumb-item ' . $breadcrumb->getActive() . '">' . $breadcrumb->getTitle() . '</li>';
+	                    }
+						?>
+					</ol>
+				</nav>
+			</div>
+			<div class="col-lg-3 text-right">
+                <?php
+                foreach($actionItems as $actionItem)
+                {
+                    echo $actionItem->getItem();
+                }
+                ?>
+			</div>
+		</div>
+		<?= $content ?>
+	</div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
-
+<!-- Start of Footer -->
+    <?php
+    foreach($bodyScripts as $script)
+    {
+        echo $script->render();
+    }
+    ?>
+    <!-- Custom JS -->
+    <script type="text/javascript" src="/dist/assets/js/custom.js"></script>
 <?php $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>
+<!-- End of Footer -->

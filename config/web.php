@@ -51,6 +51,7 @@ $config = [
         ],
     ],
     'params' => $params,
+	'defaultRoute' => 'dream/index'
 ];
 
 if (YII_ENV_DEV) {
