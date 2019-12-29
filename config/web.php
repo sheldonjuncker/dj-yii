@@ -47,6 +47,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+            	//Allow for UUIDs in otherwise normal URLs
+            	'<controller:[a-zA-Z0-9]+>/<action:[a-zA-Z0-9]+>/<id:[a-f0-9\-]+>' => '<controller>/<action>'
             ],
         ],
     ],

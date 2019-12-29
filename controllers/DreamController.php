@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
+use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
 use yii\web\NotFoundHttpException;
@@ -88,7 +89,7 @@ class DreamController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'dream' => $this->findModel($id),
         ]);
     }
 
@@ -151,8 +152,9 @@ class DreamController extends BaseController
      * @return Dream the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id): Dream
     {
+    	$id = Uuid::fromString($id)->getBytes();
         if (($model = Dream::findOne($id)) !== null) {
             return $model;
         }

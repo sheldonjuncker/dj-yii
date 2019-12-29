@@ -1,42 +1,44 @@
 <?php
-
-use yii\helpers\Html;
-use yii\widgets\DetailView;
-
-/* @var $this yii\web\View */
-/* @var $model app\models\dj\Dream */
-
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Dreams', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+/** @var \app\models\dj\Dream $dream */
 ?>
-<div class="dream-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'user_id',
-            'title',
-            'description:ntext',
-            'dreamt_at',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
-
+<div class="container">
+    <br>
+    <div class="row col-lg-12">
+        <div class="col-lg-9">
+            <h4><?=$dream->getTitle()?></h4>
+        </div>
+        <div class="col-lg-3 text-center">
+			<?=$dream->getFormattedDate()?>
+        </div>
+    </div>
+    <hr>
+    <div class="row col-lg-12">
+        <p><?=$dream->getDescription()?></p>
+    </div>
+    <hr>
+    <div class="row col-lg-12">
+		<?=$dreamTypesElement->render()?>
+    </div>
+    <div class="row col-lg-12">
+        <div class="form-group">
+            <label>Dream Categories</label>
+            <div>
+				<?php
+				foreach($dream->getCategories() as $category)
+				{
+					?>
+                    <span class="badge badge-primary badge-pill rounded-pill"><?=$category->getName()?></span>
+					<?php
+				}
+				if(!$dream->getCategories())
+				{
+					?>
+                    <span class="badge badge-primary badge-pill rounded-pill">None</span>
+					<?php
+				}
+				?>
+            </div>
+        </div>
+    </div>
 </div>

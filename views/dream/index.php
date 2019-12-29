@@ -43,7 +43,7 @@
                     </ul>
                     <div class="media-body">
                         <div>
-                            <a href="/dream/show/<?=$dream->getId()?>" class="A-filter-by-text"><?=$dream->getTitle()?></a>
+                            <a href="/dream/view/<?=$dream->getId()?>" class="A-filter-by-text"><?=$dream->getTitle()?></a>
                         </div>
                         <span class="text-small"><?=$dream->getFormattedDate()?></span>
                     </div>

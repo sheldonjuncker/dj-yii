@@ -2,6 +2,7 @@
 
 namespace app\models\dj;
 
+use Rhumsaa\Uuid\Uuid;
 use Yii;
 
 /**
@@ -35,7 +36,7 @@ class Dream extends \yii\db\ActiveRecord
             [['user_id'], 'integer'],
             [['description'], 'string'],
             [['dreamt_at', 'created_at', 'updated_at'], 'safe'],
-            [['id'], 'string', 'max' => 16],
+            [['id'], 'app\models\validators\UuidValidator', 'allowEmpty' => false, 'generateOnEmpty' => true],
             [['title'], 'string', 'max' => 256],
             [['id'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -67,9 +68,38 @@ class Dream extends \yii\db\ActiveRecord
         return new DreamQuery(get_called_class());
     }
 
-    public function getId(): string
+	/**
+	 * Gets the UUID formatted as a string.
+	 *
+	 * @return string
+	 */
+    public function getId(): ?string
 	{
-		return $this->id;
+		if(!$this->id)
+		{
+			return NULL;
+		}
+		else
+		{
+			return Uuid::fromBytes($this->id)->toString();
+		}
+	}
+
+	/**
+	 * Sets the formatted UUID.
+	 *
+	 * @param null|string $id
+	 */
+	public function setId(?string $id)
+	{
+		if(!$id)
+		{
+			$this->id = $id;
+		}
+		else
+		{
+			$this->id = Uuid::fromString($id)->getBytes();
+		}
 	}
 
 	public function getTitle(): string
