@@ -1,0 +1,35 @@
+{layout '../@layout.latte'}
+{block content}
+	<div class="container">
+		<br>
+		<div class="row col-lg-12">
+			<div class="col-lg-9">
+				<h4>{$dream->getTitle()}</h4>
+			</div>
+			<div class="col-lg-3 text-center">
+				{$dream->getFormattedDate()}
+			</div>
+		</div>
+		<hr>
+		<div class="row col-lg-12">
+			<p>{$dream->getDescription()|noescape}</p>
+		</div>
+		<hr>
+		<div class="row col-lg-12">
+			{$dreamTypesElement->render()|noescape}
+		</div>
+		<div class="row col-lg-12">
+			<div class="form-group">
+				<label>Dream Categories</label>
+				<div>
+					{foreach $categories as $category}
+						<span class="badge badge-primary badge-pill rounded-pill">{$category->getName()}</span>
+					{/foreach}
+					{if !$categories}
+						<span class="badge badge-primary badge-pill rounded-pill">None</span>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</div>
+{/block}

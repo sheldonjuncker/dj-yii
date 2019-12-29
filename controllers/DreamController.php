@@ -2,17 +2,17 @@
 
 namespace app\controllers;
 
+use app\components\gui\Breadcrumb;
+use app\components\gui\js\Script;
 use Yii;
 use app\models\dj\Dream;
-use app\models\dj\DreamSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * DreamController implements the CRUD actions for Dream model.
  */
-class DreamController extends Controller
+class DreamController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -35,12 +35,20 @@ class DreamController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new DreamSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 
+		//Register scripts needed for dreams
+		$this->getScriptRegistrar()->registerScript(
+			new Script('tagsinput/tagsinput-typeahead.js')
+		);
+		$this->getScriptRegistrar()->registerScript(
+			new Script('summernote.js')
+		);
+
+
+    	$dreams = Dream::findAll('1 = 1');
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dreams' => $dreams
         ]);
     }
 

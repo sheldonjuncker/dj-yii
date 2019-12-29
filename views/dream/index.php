@@ -1,42 +1,49 @@
-<?php
+<div class="container">
+	<br>
+	<div class="row content-list-head">
+		<div class="col-auto">
+			<h3>Recent Dreams</h3>
+		</div>
+		<div class="col-md-auto">
+			<ul class="nav nav-pills nav-small">
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" role="tab" aria-controls="day" aria-selected="false">Day</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" data-toggle="tab" role="tab" aria-controls="week" aria-selected="true">Week</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" role="tab" aria-controls="month" aria-selected="false">Month</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<hr>
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\dj\DreamSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Dreams';
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="dream-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Dream', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'user_id',
-            'title',
-            'description:ntext',
-            'dreamt_at',
-            //'created_at',
-            //'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
-
+	<ol class="list-group list-group-activity">
+        <?php
+        foreach($dreams as $dream)
+        {
+            ?>
+            <li class="list-group-item">
+                <div class="media align-items-center">
+                    <ul class="avatars">
+                        <li>
+                            <div class="avatar bg-primary">
+                                <i class="material-icons">single_bed</i>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="media-body">
+                        <div>
+                            <a href="/dream/show/<?=$dream->getId()?>" class="A-filter-by-text"><?=$dream->getTitle()?>}</a>
+                        </div>
+                        <span class="text-small"><?=$dream->getFormattedDate()?></span>
+                    </div>
+                </div>
+            </li>
+            <?php
+        }
+        ?>
+	</ol>
 </div>
