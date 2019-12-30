@@ -15,29 +15,28 @@ $this->beginPage()
 <!-- Start of Header -->
 <!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="A project management Bootstrap theme by Medium Rare">
+		<link href="/dist/assets/img/favicon.ico" rel="icon" type="image/x-icon">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+		<link href="/dist/assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="/dist/assets/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="A project management Bootstrap theme by Medium Rare">
-	<link href="/dist/assets/img/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
-	<link href="/dist/assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
-	<link href="/dist/assets/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" media="all" />
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+		<?= Html::csrfMetaTags() ?>
+		<title><?= Html::encode($this->title ? 'Dream Journal | ' . $this->title : 'Dream Journal | Celial.net') ?></title>
+		<?php $this->head() ?>
 
-	<?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-	<?php $this->head() ?>
-
-    <?php
-    foreach($headerScripts as $script)
-    {
-		echo $script->render();
-    }
-    ?>
-</head>
+<?php
+		foreach($headerScripts as $script)
+		{
+			echo "\t\t" . $script->render() . "\n";
+		}
+?>
+	</head>
 <body>
 <?php $this->beginBody() ?>
 <!-- End of Header-->
@@ -49,22 +48,22 @@ $this->beginPage()
 			<div class="col-lg-9">
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb">
-                        <?php
+<?php
 						foreach($breadcrumbs as $breadcrumb)
 						{
-						    echo '<li class="breadcrumb-item ' . $breadcrumb->getActive() . '">' . $breadcrumb->getTitle() . '</li>';
+						    echo "\t\t\t\t\t\t" . '<li class="breadcrumb-item ' . $breadcrumb->getActive() . '">' . $breadcrumb->getTitle() . '</li>' . "\n";
 	                    }
-						?>
+?>
 					</ol>
 				</nav>
 			</div>
 			<div class="col-lg-3 text-right">
-                <?php
+<?php
                 foreach($actionItems as $actionItem)
                 {
-                    echo $actionItem->getItem();
+					echo "\t\t\t\t\t" . $actionItem->getItem() . "\n";
                 }
-                ?>
+?>
 			</div>
 		</div>
 		<?= $content ?>

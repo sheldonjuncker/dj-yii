@@ -15,6 +15,8 @@ use yii\validators\Validator;
  */
 class UuidValidator extends Validator
 {
+	//By default we need to run this validator so that we can auto-generate the new ID
+	public $skipOnEmpty = false;
 	public $allowEmpty = true;
 	public $generateOnEmpty = false;
 

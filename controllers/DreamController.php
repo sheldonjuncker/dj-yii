@@ -25,7 +25,7 @@ class DreamController extends BaseController
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -87,6 +87,8 @@ class DreamController extends BaseController
      */
     public function actionView($id)
     {
+		$this->getView()->title = 'View Dream';
+
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addActionItem(new ActionItem('Edit', '/dream/edit/' . $id, 'secondary'));
 		$this->addActionItem(new ActionItem('Delete', '/dream/delete/' . $id, 'danger'));
@@ -103,16 +105,20 @@ class DreamController extends BaseController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionNew()
     {
+		$this->getView()->title = 'New Dream';
+		$this->addBreadcrumb(new Breadcrumb('New', '', true));
+
         $model = new Dream();
+		$model->user_id = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->getId()]);
         }
 
-        return $this->render('create', [
-            'dream' => $model,
+        return $this->render('_form', [
+            'model' => $model,
         ]);
     }
 
@@ -125,6 +131,8 @@ class DreamController extends BaseController
      */
     public function actionEdit($id)
     {
+		$this->getView()->title = 'Edit Dream';
+
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addActionItem(new ActionItem('Cancel', '/dream/view/' . $id, 'secondary'));
 
@@ -133,7 +141,7 @@ class DreamController extends BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->getId()]);
         }
 
         return $this->render('_form', [

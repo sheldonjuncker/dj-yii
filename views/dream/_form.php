@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="container">
 	<br>
-	<h3>Edit Dream</h3>
+	<h3><?= Html::encode($this->title) ?></h3>
 	<div class="dream-form">
 		<?php $form = ActiveForm::begin(); ?>
 
@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 		<?= $form->field($model, 'description')->textarea(['rows' => 12]) ?>
 
 		<div class="form-group">
-			<?= Html::submitButton('Update', ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->getIsNewRecord() ? 'Add' : 'Update', ['class' => 'btn btn-primary']) ?>
 		</div>
 
 		<?php ActiveForm::end(); ?>

@@ -35,13 +35,13 @@ class Dream extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'user_id', 'title', 'dreamt_at'], 'required'],
+            [['user_id', 'title', 'dreamt_at'], 'required'],
             [['user_id'], 'integer'],
             [['description'], 'string'],
             [['dreamt_at', 'created_at', 'updated_at'], 'safe'],
-            [['id'], 'app\models\validators\UuidValidator', 'allowEmpty' => false, 'generateOnEmpty' => true],
             [['title'], 'string', 'max' => 256],
             [['id'], 'unique'],
+			[['id'], 'app\models\validators\UuidValidator', 'allowEmpty' => false, 'generateOnEmpty' => true],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
