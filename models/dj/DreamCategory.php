@@ -42,6 +42,14 @@ class DreamCategory extends \yii\db\ActiveRecord
         ];
     }
 
+	/**
+	 * @return null|string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
     /**
      * {@inheritdoc}
      * @return DreamCategoryQuery the active query used by this AR class.

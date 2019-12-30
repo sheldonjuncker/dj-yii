@@ -51,6 +51,20 @@ $config = [
             	'<controller:[a-zA-Z0-9]+>/<action:[a-zA-Z0-9]+>/<id:[a-f0-9\-]+>' => '<controller>/<action>'
             ],
         ],
+		'assetManager' => [
+			//Disable Yii's BS as we are using our own
+			'bundles' => [
+				'yii\web\JqueryAsset' => [
+					'js'=>[]
+				],
+				'yii\bootstrap\BootstrapPluginAsset' => [
+					'js'=>[]
+				],
+				'yii\bootstrap\BootstrapAsset' => [
+					'css' => [],
+				],
+			]
+		]
     ],
     'params' => $params,
 	'defaultRoute' => 'dream/index'
@@ -58,12 +72,12 @@ $config = [
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
+    /*$config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
-    ];
+    ];*/
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [

@@ -18,20 +18,23 @@
     </div>
     <hr>
     <div class="row col-lg-12">
-		<?=$dreamTypesElement->render()?>
+		<?php
+        //$dreamTypesElement->render()
+        ?>
     </div>
     <div class="row col-lg-12">
         <div class="form-group">
             <label>Dream Categories</label>
             <div>
 				<?php
-				foreach($dream->getCategories() as $category)
+				foreach($dream->categories as $category)
 				{
 					?>
                     <span class="badge badge-primary badge-pill rounded-pill"><?=$category->getName()?></span>
 					<?php
 				}
-				if(!$dream->getCategories())
+
+				if(!$dream->categories)
 				{
 					?>
                     <span class="badge badge-primary badge-pill rounded-pill">None</span>

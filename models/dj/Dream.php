@@ -4,6 +4,7 @@ namespace app\models\dj;
 
 use Rhumsaa\Uuid\Uuid;
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "dj.dream".
@@ -15,6 +16,8 @@ use Yii;
  * @property string $dreamt_at
  * @property string|null $created_at
  * @property string|null $updated_at
+ *
+ * @property DreamCategory[] $categories
  */
 class Dream extends \yii\db\ActiveRecord
 {
@@ -50,12 +53,12 @@ class Dream extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'user_id' => 'User',
             'title' => 'Title',
             'description' => 'Description',
-            'dreamt_at' => 'Dreamt At',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'dreamt_at' => 'Date',
+            'created_at' => 'Created Date',
+            'updated_at' => 'Updated Date',
         ];
     }
 
@@ -102,9 +105,30 @@ class Dream extends \yii\db\ActiveRecord
 		}
 	}
 
+	/**
+	 * @return null|string
+	 */
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getTitle(): string
 	{
 		return $this->title;
+	}
+
+	/**
+	 * Dream category relation.
+	 *
+	 * @return DreamCategoryQuery
+	 */
+	public function getCategories(): DreamCategoryQuery
+	{
+		return $this->hasMany(DreamCategory::class, ['id' => 'category_id'])->viaTable('dream_to_dream_category', ['dream_id' => 'id']);
 	}
 
     public function getFormattedDate(): string

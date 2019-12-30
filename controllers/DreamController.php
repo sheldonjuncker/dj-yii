@@ -33,6 +33,14 @@ class DreamController extends BaseController
 
     public function beforeAction($action)
 	{
+		//Register scripts needed for dreams
+		$this->getScriptRegistrar()->registerScript(
+			new Script('tagsinput/tagsinput-typeahead.js')
+		);
+		$this->getScriptRegistrar()->registerScript(
+			new Script('summernote.js')
+		);
+
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 
 		return parent::beforeAction($action);
@@ -46,15 +54,6 @@ class DreamController extends BaseController
     {
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
-
-		//Register scripts needed for dreams
-		$this->getScriptRegistrar()->registerScript(
-			new Script('tagsinput/tagsinput-typeahead.js')
-		);
-		$this->getScriptRegistrar()->registerScript(
-			new Script('summernote.js')
-		);
-
 
     	$dreams = Dream::find()->orderBy('dreamt_at DESC')->all();
 
@@ -88,6 +87,12 @@ class DreamController extends BaseController
      */
     public function actionView($id)
     {
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
+		$this->addActionItem(new ActionItem('Edit', '/dream/edit/' . $id, 'secondary'));
+		$this->addActionItem(new ActionItem('Delete', '/dream/delete/' . $id, 'danger'));
+
+		$this->addBreadcrumb(new Breadcrumb('View', '', true));
+
         return $this->render('view', [
             'dream' => $this->findModel($id),
         ]);
@@ -103,11 +108,11 @@ class DreamController extends BaseController
         $model = new Dream();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->getId()]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'dream' => $model,
         ]);
     }
 
@@ -118,15 +123,20 @@ class DreamController extends BaseController
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionEdit($id)
     {
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
+		$this->addActionItem(new ActionItem('Cancel', '/dream/view/' . $id, 'secondary'));
+
+		$this->addBreadcrumb(new Breadcrumb('Edit', '', true));
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('_form', [
             'model' => $model,
         ]);
     }

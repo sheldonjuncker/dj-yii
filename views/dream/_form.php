@@ -8,28 +8,27 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="dream-form">
+<div class="container">
+	<br>
+	<h3>Edit Dream</h3>
+	<div class="dream-form">
+		<?php $form = ActiveForm::begin(); ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+		<?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id')->textInput(['maxlength' => true]) ?>
+		<?= $form->field($model, 'dreamt_at')->textInput([
+			'class' => 'form-control flatpickr-input',
+			'data-flatpickr' => '',
+			'data-default-date' => '',
+			'data-alt-input' => 'true'
+		]) ?>
 
-    <?= $form->field($model, 'user_id')->textInput(['maxlength' => true]) ?>
+		<?= $form->field($model, 'description')->textarea(['rows' => 12]) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+		<div class="form-group">
+			<?= Html::submitButton('Update', ['class' => 'btn btn-primary']) ?>
+		</div>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'dreamt_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+		<?php ActiveForm::end(); ?>
+	</div>
 </div>
