@@ -43,6 +43,14 @@ class DreamCategory extends \yii\db\ActiveRecord
     }
 
 	/**
+	 * @return int
+	 */
+	public function getId(): int
+	{
+		return $this->id;
+	}
+
+	/**
 	 * @return null|string
 	 */
 	public function getName()

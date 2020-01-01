@@ -18,6 +18,7 @@ use yii\db\ActiveQuery;
  * @property string|null $updated_at
  *
  * @property DreamCategory[] $categories
+ * @property DreamType[] $types
  */
 class Dream extends \yii\db\ActiveRecord
 {
@@ -131,8 +132,36 @@ class Dream extends \yii\db\ActiveRecord
 		return $this->hasMany(DreamCategory::class, ['id' => 'category_id'])->viaTable('dream_to_dream_category', ['dream_id' => 'id']);
 	}
 
+	/**
+	 * Dream type relation.
+	 *
+	 * @return DreamTypeQuery
+	 */
+	public function getTypes(): DreamTypeQuery
+	{
+		return $this->hasMany(DreamType::class, ['id' => 'type_id'])->viaTable('dream_to_dream_type', ['dream_id' => 'id']);
+	}
+
     public function getFormattedDate(): string
 	{
 		return Yii::$app->getFormatter()->asDate($this->dreamt_at);
+	}
+
+	/**
+	 * Checks if a dream has a type associated.
+	 *
+	 * @param DreamType $type
+	 * @return bool
+	 */
+	public function hasType(DreamType $type): bool
+	{
+		foreach($this->types as $myType)
+		{
+			if($type->id == $myType->id)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

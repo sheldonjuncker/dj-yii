@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
+use app\models\dj\DreamType;
+use app\models\dj\DreamTypeQuery;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
@@ -36,9 +38,6 @@ class DreamController extends BaseController
 		//Register scripts needed for dreams
 		$this->getScriptRegistrar()->registerScript(
 			new Script('tagsinput/tagsinput-typeahead.js')
-		);
-		$this->getScriptRegistrar()->registerScript(
-			new Script('summernote.js')
 		);
 
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
@@ -97,6 +96,8 @@ class DreamController extends BaseController
 
         return $this->render('view', [
             'dream' => $this->findModel($id),
+			'dreamTypes' => DreamType::find()->excludeNormal()->all(),
+			'dreamTypesDisabled' => true
         ]);
     }
 
@@ -107,6 +108,7 @@ class DreamController extends BaseController
      */
     public function actionNew()
     {
+
 		$this->getView()->title = 'New Dream';
 		$this->addBreadcrumb(new Breadcrumb('New', '', true));
 
@@ -118,7 +120,10 @@ class DreamController extends BaseController
         }
 
         return $this->render('_form', [
-            'model' => $model,
+            'dream' => $model,
+			'dreamTypes' => DreamType::find()->excludeNormal()->all(),
+			'dreamTypesDisabled' => false,
+			'categoryIdString' => ''
         ]);
     }
 
@@ -138,14 +143,26 @@ class DreamController extends BaseController
 
 		$this->addBreadcrumb(new Breadcrumb('Edit', '', true));
 
-        $model = $this->findModel($id);
+        $dream = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->getId()]);
+		//Add dream to dream categories
+		$categories = [];
+		foreach($dream->categories as $category)
+		{
+			$categories[] = $category->getId();
+		}
+		$categoryIdString = implode(',', $categories);
+
+
+		if ($dream->load(Yii::$app->request->post()) && $dream->save()) {
+            return $this->redirect(['view', 'id' => $dream->getId()]);
         }
 
         return $this->render('_form', [
-            'model' => $model,
+            'dream' => $dream,
+			'dreamTypes' => DreamType::find()->excludeNormal()->all(),
+			'dreamTypesDisabled' => false,
+			'categoryIdString' => $categoryIdString
         ]);
     }
 

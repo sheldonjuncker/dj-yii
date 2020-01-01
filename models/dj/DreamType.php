@@ -53,4 +53,20 @@ class DreamType extends \yii\db\ActiveRecord
     {
         return new DreamTypeQuery(get_called_class());
     }
+
+	/**
+	 * @return int
+	 */
+	public function getId(): int
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
 }

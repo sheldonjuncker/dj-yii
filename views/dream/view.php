@@ -1,5 +1,7 @@
 <?php
 /** @var \app\models\dj\Dream $dream */
+/** @var \app\models\dj\DreamType[] $dreamTypes */
+/** @var bool $dreamTypesDisabled */
 ?>
 
 <div class="container">
@@ -22,6 +24,26 @@
         //$dreamTypesElement->render()
         ?>
     </div>
+	<div class="row col-lg-12">
+		<div class="form-group">
+			<label>Dream Type</label>
+			<div>
+<?php
+				foreach($dreamTypes as $dreamType)
+				{
+					$checked = $dream->hasType($dreamType) ? 'checked' : '';
+					$disabled = $dreamTypesDisabled ? 'disabled' : '';
+?>
+					<div class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="DreamType_<?=$dreamType->getId()?>}" name="Dream[types][<?=$dreamType->getId()?>]" <?=$checked?> <?=$disabled?>>
+						<label class="custom-control-label" for="DreamType_<?=$dreamType->getId()?>"><?=$dreamType->getName()?></label>
+					</div>
+<?php
+				}
+?>
+			</div>
+		</div>
+	</div>
     <div class="row col-lg-12">
         <div class="form-group">
             <label>Dream Categories</label>

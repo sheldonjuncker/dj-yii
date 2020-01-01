@@ -9,6 +9,11 @@ namespace app\models\dj;
  */
 class DreamTypeQuery extends \yii\db\ActiveQuery
 {
+	public function excludeNormal(bool $exclude = true): self
+	{
+		return $this->andWhere("name != 'Normal'");
+	}
+
     /*public function active()
     {
         return $this->andWhere('[[status]]=1');
