@@ -51,10 +51,20 @@ class DreamcategoryController extends BaseController
         $searchModel = new DreamCategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $request = Yii::$app->request;
+
+        $type = $request->getQueryParam('type');
+		if($type == 'json')
+		{
+			return $this->asJson(DreamCategory::find()->all());
+		}
+        else
+		{
+			return $this->render('index', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+			]);
+		}
     }
 
     /**
