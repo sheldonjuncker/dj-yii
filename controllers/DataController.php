@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\gui\Breadcrumb;
 use app\components\gui\ActionItem;
+use app\models\data\ExportForm;
 
 /**
  * Class DataController
@@ -33,7 +34,10 @@ class DataController extends BaseController
 		$this->getView()->title = 'Export Dreams';
 		$this->addBreadcrumb(new Breadcrumb('Export', '', true));
 
-		return $this->render('export');
+		$exportForm = new ExportForm();
+		return $this->render('export', [
+			'exportForm' => $exportForm
+		]);
 	}
 
 	public function actionImport()
