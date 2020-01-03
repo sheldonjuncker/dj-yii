@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
+use app\models\dj\DreamCategory;
 use app\models\dj\DreamType;
 use app\models\dj\DreamTypeQuery;
 use Rhumsaa\Uuid\Uuid;
@@ -108,19 +109,44 @@ class DreamController extends BaseController
      */
     public function actionNew()
     {
-
 		$this->getView()->title = 'New Dream';
 		$this->addBreadcrumb(new Breadcrumb('New', '', true));
 
-        $model = new Dream();
-		$model->user_id = 1;
+		$dream = new Dream();
+		$dream->user_id = 1;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->getId()]);
-        }
+		$request = Yii::$app->request;
+		if($request->getIsPost())
+		{
+			$postData = $request->post($dream->formName(), []);
+			$categoryIdString = $postData['categories'] ?? "";
+			$categories = explode(',', $categoryIdString);
+
+			if($postData)
+			{
+				$dream->attributes = $postData;
+				if($dream->save())
+				{
+					//Add new categories
+					if($categories)
+					{
+						foreach($categories as $category)
+						{
+							$dreamCategory = DreamCategory::find()->andWhere(['id' => $category])->one();
+							if($dreamCategory)
+							{
+								$dream->link('categories', $dreamCategory);
+							}
+						}
+						$dream->save();
+					}
+					return $this->redirect(['view', 'id' => $dream->getId()]);
+				}
+			}
+		}
 
         return $this->render('_form', [
-            'dream' => $model,
+            'dream' => $dream,
 			'dreamTypes' => DreamType::find()->excludeNormal()->all(),
 			'dreamTypesDisabled' => false,
 			'categoryIdString' => ''
@@ -153,10 +179,35 @@ class DreamController extends BaseController
 		}
 		$categoryIdString = implode(',', $categories);
 
+		$request = Yii::$app->request;
+		if($request->getIsPost())
+		{
+			$postData = $request->post($dream->formName(), []);
+			$categoryIdString = $postData['categories'] ?? "";
+			$categories = explode(',', $categoryIdString);
 
-		if ($dream->load(Yii::$app->request->post()) && $dream->save()) {
-            return $this->redirect(['view', 'id' => $dream->getId()]);
-        }
+			if($postData)
+			{
+				//Remove all previous categories
+				$dream->unlinkAll('categories', true);
+
+				//Add new categories
+				foreach($categories as $category)
+				{
+					$dreamCategory = DreamCategory::find()->andWhere(['id' => $category])->one();
+					if($dreamCategory)
+					{
+						$dream->link('categories', $dreamCategory);
+					}
+				}
+				$dream->attributes = $postData;
+
+				if($dream->save())
+				{
+					return $this->redirect(['view', 'id' => $dream->getId()]);
+				}
+			}
+		}
 
         return $this->render('_form', [
             'dream' => $dream,
