@@ -77,10 +77,10 @@
 				<div id="submenu-3" class="collapse">
 					<ul class="nav nav-small flex-column">
 						<li class="nav-item">
-							<a class="nav-link" href="/import">Import</a>
+							<a class="nav-link" href="/data/import">Import</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/export">Export</a>
+							<a class="nav-link" href="/data/export">Export</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/dreamcategory">Dream Categories</a>
