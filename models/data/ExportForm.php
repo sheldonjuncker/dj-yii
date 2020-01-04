@@ -35,16 +35,25 @@ class ExportForm extends Model
 	}
 
 	/**
-	 * Gets all of the dream data to export.
+	 * Gets the dreams to export.
 	 *
-	 * @return array
+	 * @return Dream[]
 	 */
 	public function getDreams(): array
 	{
 		$startDate = $this->start_date ?: 0;
 		$endDate = $this->end_date ?: time();
-		$dreams = Dream::find()->dreamtBetween($startDate, $endDate)->all();
+		return Dream::find()->dreamtBetween($startDate, $endDate)->orderBy('dreamt_at DESC')->all();
+	}
 
+	/**
+	 * Gets all of the dream data to export.
+	 *
+	 * @return array
+	 */
+	public function getDreamData(): array
+	{
+		$dreams = $this->getDreams();
 		$dreamData = [];
 		foreach($dreams as $dream)
 		{

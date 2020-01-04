@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\gui\Breadcrumb;
 use app\components\gui\ActionItem;
 use app\models\data\ExportForm;
+use app\models\dj\Dream;
 use yii\helpers\Json;
 
 /**
@@ -41,11 +42,41 @@ class DataController extends BaseController
 		if($request->getIsPost())
 		{
 			$exportForm->load($request->post());
-			$dreams = $exportForm->getDreams();
 
-			$file = tmpfile();
-			fwrite($file, Json::encode($dreams, JSON_PRETTY_PRINT));
-			return \Yii::$app->response->sendStreamAsFile($file, 'dream-export-' . date('Y-m-d') . '.json');
+			if($exportForm->format == 'json')
+			{
+				//Send JSON data
+				$dreams = $exportForm->getDreamData();
+				$file = tmpfile();
+				fwrite($file, Json::encode($dreams, JSON_PRETTY_PRINT));
+				return \Yii::$app->response->sendStreamAsFile($file, 'dream-export-' . date('Y-m-d') . '.json');
+			}
+			else
+			{
+				//Render HTML data
+
+				//Group dreams by date
+				$dateToDreams = [];
+				$dreamCount = 0;
+
+				foreach($exportForm->getDreams() as $dream)
+				{
+					$dreamCount++;
+					$dreamDate = $dream->getFormattedDate();
+					if(!isset($dateToDreams[$dreamDate]))
+					{
+						$dateToDreams[$dreamDate] = [];
+					}
+					$dateToDreams[$dreamDate][] = $dream;
+				}
+
+				$data = [];
+				$data['dateToDreams'] = $dateToDreams;
+				$data['dreamCount'] = $dreamCount;
+				$data['userName'] = 'Sheldon Juncker';
+				$data['currentTime'] = date('l, F dS Y');
+				return $this->renderPartial('export-html', $data);
+			}
 		}
 
 		return $this->render('export', [
