@@ -5,8 +5,13 @@ namespace app\controllers;
 use app\components\gui\Breadcrumb;
 use app\components\gui\ActionItem;
 use app\models\data\ExportForm;
+use app\models\data\ImportForm;
 use app\models\dj\Dream;
+use app\models\dj\DreamCategory;
+use app\models\dj\DreamType;
 use yii\helpers\Json;
+use yii\web\BadRequestHttpException;
+use yii\web\UploadedFile;
 
 /**
  * Class DataController
@@ -89,6 +94,66 @@ class DataController extends BaseController
 		$this->getView()->title = 'Import Dreams';
 		$this->addBreadcrumb(new Breadcrumb('Import', '', true));
 
-		return $this->render('import');
+		$importForm = new ImportForm();
+		$request = \Yii::$app->request;
+		if($request->getIsPost())
+		{
+			$importForm->load($request->post());
+			$importForm->file = UploadedFile::getInstance($importForm, 'file');
+			$fileContents = $importForm->readFile();
+
+			if($fileContents)
+			{
+				if($importForm->format == 'json')
+				{
+					$dreamData = Json::decode($fileContents);
+					foreach($dreamData as $dreamAttributes)
+					{
+						$dream = new Dream();
+						$dream->attributes = $dreamAttributes;
+						$dream->setId($dream->id);
+
+						$dreamAlreadyExists = Dream::find()->andWhere('id = :id',[':id' => $dream->id])->exists();
+						if($dreamAlreadyExists)
+						{
+							continue;
+						}
+						if(!$dream->save())
+						{
+							print "<pre>";
+							var_dump($dream->getErrors());
+							exit;
+						}
+
+						foreach($dreamAttributes['categories'] as $categoryName)
+						{
+							$category = DreamCategory::find()->andWhere('name = :name', [':name' => $categoryName])->one();
+							if($category)
+							{
+								$dream->link('categories', $category);
+							}
+						}
+
+						foreach($dreamAttributes['types'] as $typeName)
+						{
+							$type = DreamType::find()->andWhere('name = :name', [':name' => $typeName])->one();
+							if($type)
+							{
+								$dream->link('types', $type);
+							}
+						}
+						$dream->save();
+					}
+				}
+				else
+				{
+					throw new BadRequestHttpException("Text import no longer supported.");
+				}
+			}
+		}
+
+		return $this->render('import', [
+			'importForm' => $importForm
+		]);
 	}
 }

@@ -25,16 +25,6 @@ class ExportForm extends Model
 	}
 
 	/**
-	 * @return array customized attribute labels
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'format' => 'Format'
-		];
-	}
-
-	/**
 	 * Gets the dreams to export.
 	 *
 	 * @return Dream[]
