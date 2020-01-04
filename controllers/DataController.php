@@ -9,6 +9,8 @@ use app\models\data\ImportForm;
 use app\models\dj\Dream;
 use app\models\dj\DreamCategory;
 use app\models\dj\DreamType;
+use app\utilities\date\MysqlFormatter;
+use yii\db\Exception;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\UploadedFile;
@@ -113,19 +115,37 @@ class DataController extends BaseController
 						$dream->attributes = $dreamAttributes;
 						$dream->setId($dream->id);
 
+						$dream->updated_at = MysqlFormatter::toMysql($dream->updated_at);
+						$dream->created_at = MysqlFormatter::toMysql($dream->created_at);
+						$dream->dreamt_at = MysqlFormatter::toMysql($dream->dreamt_at);
+						$dream->description = strip_tags($dream->description);
+						$dream->description = str_replace("\u2019", "'", $dream->description);
+						$dream->description = str_replace("\u2018", "'", $dream->description);
+
 						$dreamAlreadyExists = Dream::find()->andWhere('id = :id',[':id' => $dream->id])->exists();
 						if($dreamAlreadyExists)
 						{
 							continue;
 						}
-						if(!$dream->save())
+						try
+						{
+							$result = $dream->save();
+							if(!$result)
+							{
+								print "<pre>";
+								var_dump($dream->getErrors());
+								exit;
+							}
+						}
+						catch(Exception $e)
 						{
 							print "<pre>";
-							var_dump($dream->getErrors());
+							print $e->getMessage();
+							print_r($dream->attributes);
 							exit;
 						}
 
-						foreach($dreamAttributes['categories'] as $categoryName)
+						foreach($dreamAttributes['categories'] ?? [] as $categoryName)
 						{
 							$category = DreamCategory::find()->andWhere('name = :name', [':name' => $categoryName])->one();
 							if($category)
@@ -134,7 +154,7 @@ class DataController extends BaseController
 							}
 						}
 
-						foreach($dreamAttributes['types'] as $typeName)
+						foreach($dreamAttributes['types'] ?? [] as $typeName)
 						{
 							$type = DreamType::find()->andWhere('name = :name', [':name' => $typeName])->one();
 							if($type)
