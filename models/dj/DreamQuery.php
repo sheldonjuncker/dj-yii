@@ -2,6 +2,8 @@
 
 namespace app\models\dj;
 
+use app\utilities\date\MysqlFormatter;
+
 /**
  * This is the ActiveQuery class for [[Dream]].
  *
@@ -9,6 +11,17 @@ namespace app\models\dj;
  */
 class DreamQuery extends \yii\db\ActiveQuery
 {
+	public function dreamtBetween($startDate, $endDate): self
+	{
+		$startDate = MysqlFormatter::toMysql($startDate);
+		$endDate = MysqlFormatter::toMysql($endDate);
+
+		return $this->andWhere('dreamt_at BETWEEN :startDate AND :endDate', [
+			':startDate' => $startDate,
+			':endDate' => $endDate
+		]);
+	}
+
     /*public function active()
     {
         return $this->andWhere('[[status]]=1');

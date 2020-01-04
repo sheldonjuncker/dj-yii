@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\gui\Breadcrumb;
 use app\components\gui\ActionItem;
 use app\models\data\ExportForm;
+use yii\helpers\Json;
 
 /**
  * Class DataController
@@ -35,6 +36,18 @@ class DataController extends BaseController
 		$this->addBreadcrumb(new Breadcrumb('Export', '', true));
 
 		$exportForm = new ExportForm();
+
+		$request = \Yii::$app->request;
+		if($request->getIsPost())
+		{
+			$exportForm->load($request->post());
+			$dreams = $exportForm->getDreams();
+
+			$file = tmpfile();
+			fwrite($file, Json::encode($dreams, JSON_PRETTY_PRINT));
+			return \Yii::$app->response->sendStreamAsFile($file, 'dream-export-' . date('Y-m-d') . '.json');
+		}
+
 		return $this->render('export', [
 			'exportForm' => $exportForm
 		]);
