@@ -121,6 +121,7 @@ class DreamController extends BaseController
 			$postData = $request->post($dream->formName(), []);
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
+			$types = $postData['types'] ?? [];
 
 			if($postData)
 			{
@@ -140,6 +141,21 @@ class DreamController extends BaseController
 						}
 						$dream->save();
 					}
+
+					//Add types
+					if($types)
+					{
+						foreach($types as $typeId => $on)
+						{
+							$dreamType = DreamType::find()->andWhere(['id' => $typeId])->one();
+							if($dreamType)
+							{
+								$dream->link('types', $dreamType);
+							}
+						}
+						$dream->save();
+					}
+
 					return $this->redirect(['view', 'id' => $dream->getId()]);
 				}
 			}
@@ -185,6 +201,7 @@ class DreamController extends BaseController
 			$postData = $request->post($dream->formName(), []);
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
+			$types = $postData['types'] ?? [];
 
 			if($postData)
 			{
@@ -201,6 +218,19 @@ class DreamController extends BaseController
 					}
 				}
 				$dream->attributes = $postData;
+
+				//Remove all previous types
+				$dream->unlinkAll('types', true);
+
+				//Add new types
+				foreach($types as $typeId => $on)
+				{
+					$dreamType = DreamType::find()->andWhere(['id' => $typeId])->one();
+					if($dreamType)
+					{
+						$dream->link('types', $dreamType);
+					}
+				}
 
 				if($dream->save())
 				{

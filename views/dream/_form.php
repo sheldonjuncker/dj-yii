@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
 					$disabled = $dreamTypesDisabled ? 'disabled' : '';
 					?>
 					<div class="custom-control custom-switch">
-						<input type="checkbox" class="custom-control-input" id="DreamType_<?=$dreamType->getId()?>}" name="Dream[types][<?=$dreamType->getId()?>]" <?=$checked?> <?=$disabled?>>
+						<input type="checkbox" class="custom-control-input" id="DreamType_<?=$dreamType->getId()?>" name="Dream[types][<?=$dreamType->getId()?>]" <?=$checked?> <?=$disabled?>>
 						<label class="custom-control-label" for="DreamType_<?=$dreamType->getId()?>"><?=$dreamType->getName()?></label>
 					</div>
 					<?php

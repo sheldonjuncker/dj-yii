@@ -9,7 +9,7 @@
 		var myChart = new Chart(ctx, {
 			type: 'bar',
 			data: {
-				labels: <?=json_encode(array_keys($dreamCountData))?>,
+				labels: <?=json_encode(array_keys($dreamCountData))?>,p
 		datasets: [{
 			label: 'Dream Count by Category',
 			data: <?=json_encode(array_values($dreamCountData))?>,
