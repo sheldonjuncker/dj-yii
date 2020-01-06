@@ -7,16 +7,17 @@ use Yii;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
+ * RegistrationForm is the model behind the registration form.
  *
  * @property User|null $user This property is read-only.
  *
  */
-class LoginForm extends Model
+class RegistrationForm extends Model
 {
-    public $username;
+    public $email;
+    public $name;
     public $password;
-    public $rememberMe = true;
+    public $password_verify;
 
     private $_user = false;
 
@@ -27,14 +28,25 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+            // email and password are both required
+            [['email', 'name', 'password', 'password_verify'], 'required'],
+			[['email'], 'email'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['email', 'validateEmail'],
         ];
     }
+
+    public function validateEmail($attribute, $params)
+	{
+		if (!$this->hasErrors())
+		{
+			if($this->getUser())
+			{
+				$this->addError($attribute, "A user with that email address already exists.");
+			}
+		}
+	}
 
     /**
      * Validates the password.
@@ -45,23 +57,27 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-
-            if (!$user || !$user->validateAuthKey($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
-        }
-    }
+		if (!$this->hasErrors())
+		{
+			if($this->password !== $this->password_verify)
+			{
+				$this->addError($attribute, "The password and its verification do not match.");
+			}
+		}
+	}
 
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function register()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+        	$user = new User();
+        	$user->email = $this->email;
+        	$user->name = $this->name;
+        	$user->password = $user->generatePassword($this->password);
+        	return $user->save();
         }
         return false;
     }
@@ -74,7 +90,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::find()->andWhere(['email' => $this->username])->one();
+            $this->_user = User::find()->andWhere(['email' => $this->email])->one();
         }
 
         return $this->_user;

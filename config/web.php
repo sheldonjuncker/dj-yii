@@ -20,11 +20,11 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\dj\User',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'user/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',

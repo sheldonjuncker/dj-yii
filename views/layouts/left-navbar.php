@@ -110,9 +110,9 @@
 				<img alt="Image" src="/dist/assets/img/avatar-male-4.jpg" class="avatar" />
 			</a>
 			<div class="dropdown-menu">
-				<a href="nav-side-user.html" class="dropdown-item">Profile</a>
+				<a href="nav-side-user.html" class="dropdown-item"><?=Yii::$app->getUser()->getIdentity()->name ?? 'Anonymous'?>'s Profile</a>
 				<a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
-				<a href="#" class="dropdown-item">Log Out</a>
+				<a href="/user/logout" class="dropdown-item">Log Out</a>
 			</div>
 		</div>
 	</div>
