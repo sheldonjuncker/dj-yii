@@ -38,7 +38,7 @@ $this->title = 'Login';
 				<?php
 				if($model->hasErrors())
 				{
-					echo Html::a('Forgot Password?', '/user/reset', ['class' => 'btn btn-secondary', 'name' => 'reset-button']);
+					echo Html::a('Forgot Password?', '/user/resetrequest', ['class' => 'btn btn-secondary', 'name' => 'reset-button']);
 				}
 				?>
             </div>

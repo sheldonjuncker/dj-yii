@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\gui\Breadcrumb;
+use app\models\PasswordResetRequestForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -68,7 +69,6 @@ class UserController extends BaseController
             return $this->goHome();
         }
 
-        $invalidLogin = false;
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login())
         {
@@ -92,6 +92,29 @@ class UserController extends BaseController
 
         return $this->goHome();
     }
+
+	/**
+	 * Password reset request form.
+	 */
+    public function actionResetrequest()
+	{
+		$this->addBreadcrumb(new Breadcrumb('Password Reset Request', '', true));
+
+		if (!Yii::$app->user->isGuest)
+		{
+			return $this->goHome();
+		}
+
+		$model = new PasswordResetRequestForm();
+		if ($model->load(Yii::$app->request->post()) && $model->sendResetLink())
+		{
+			return $this->goBack();
+		}
+
+		return $this->render('resetRequest', [
+			'model' => $model
+		]);
+	}
 
     public function actionRegister()
 	{
