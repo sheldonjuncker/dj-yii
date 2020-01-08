@@ -16,7 +16,7 @@
     </div>
     <hr>
     <div class="row col-lg-12">
-        <p><?=$dream->getDescription()?></p>
+        <p><?=nl2br($dream->getDescription())?></p>
     </div>
     <hr>
     <div class="row col-lg-12">

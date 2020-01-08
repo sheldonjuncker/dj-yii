@@ -63,18 +63,21 @@ class UserController extends BaseController
     {
 		$this->addBreadcrumb(new Breadcrumb('Login', '', true));
 
-        if (!Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest)
+        {
             return $this->goHome();
         }
 
+        $invalidLogin = false;
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()) && $model->login())
+        {
+			return $this->goBack();
         }
 
         $model->password = '';
         return $this->render('login', [
-            'model' => $model,
+            'model' => $model
         ]);
     }
 

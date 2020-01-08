@@ -9,8 +9,9 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Register';
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container">
+	<br>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>Please fill out the following fields to register:</p>
 
