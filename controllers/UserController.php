@@ -3,9 +3,11 @@
 namespace app\controllers;
 
 use app\components\gui\Breadcrumb;
+use app\models\PasswordResetForm;
 use app\models\PasswordResetRequestForm;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\LoginForm;
 use app\models\RegistrationForm;
@@ -108,10 +110,41 @@ class UserController extends BaseController
 		$model = new PasswordResetRequestForm();
 		if ($model->load(Yii::$app->request->post()) && $model->sendResetLink())
 		{
+
 			return $this->goBack();
 		}
 
 		return $this->render('resetRequest', [
+			'model' => $model
+		]);
+	}
+
+	/**
+	 * Password reset form.
+	 */
+	public function actionReset()
+	{
+		$this->addBreadcrumb(new Breadcrumb('Password Reset', '', true));
+
+		if (!Yii::$app->user->isGuest)
+		{
+			return $this->goHome();
+		}
+
+		$model = new PasswordResetForm();
+		$model->code = Yii::$app->request->get('code', '');
+
+		if(!$model->validate('code'))
+		{
+			throw new NotFoundHttpException('Invalid password reset link.');
+		}
+
+		if ($model->load(Yii::$app->request->post()) && $model->resetPassword())
+		{
+			return $this->redirect('/user/login');
+		}
+
+		return $this->render('reset', [
 			'model' => $model
 		]);
 	}

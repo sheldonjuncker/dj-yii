@@ -7,13 +7,11 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Password Reset Request';
+$this->title = 'Password Reset';
 ?>
 <div class="container">
 	<br>
 	<h3><?= Html::encode($this->title) ?></h3>
-
-	<p>We're sorry you forgot your password. To tell the truth, we don't know what it is either, so you'll have to enter your email address and we'll send you a code so that you can reset it.</p>
 
 	<?php $form = ActiveForm::begin([
 		'id' => 'login-form',
@@ -24,11 +22,12 @@ $this->title = 'Password Reset Request';
 		],
 	]); ?>
 
-	<?= $form->field($model, 'email')->textInput(['autofocus' => true, 'type' => 'email']) ?>
+	<?= $form->field($model, 'new_password')->textInput(['autofocus' => true, 'type' => 'password']) ?>
+	<?= $form->field($model, 'new_password_verify')->textInput(['type' => 'password']) ?>
 
 	<div class="form-group">
 		<div class="col-lg-offset-1 col-lg-11">
-			<?= Html::submitButton('Send Request', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+			<?= Html::submitButton('Reset Password', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
 		</div>
 	</div>
 

@@ -37,7 +37,7 @@ class RegistrationForm extends Model
         ];
     }
 
-    public function validateEmail($attribute, $params)
+	public function validateEmail($attribute, $params)
 	{
 		if (!$this->hasErrors())
 		{
