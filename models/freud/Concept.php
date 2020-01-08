@@ -50,4 +50,9 @@ class Concept extends \yii\db\ActiveRecord
     {
         return new ConceptQuery(get_called_class());
     }
+
+    public function getId()
+	{
+		return $this->id;
+	}
 }
