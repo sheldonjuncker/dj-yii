@@ -68,7 +68,7 @@ class DreamcategoryController extends BaseController
     {
 		$this->addBreadcrumb(new Breadcrumb('View', '', true));
 
-		$this->addActionItem(new ActionItem('Edit', '/dreamcategory/update/' . $id, 'secondary'));
+		$this->addActionItem(new ActionItem('Edit', '/dreamcategory/edit/' . $id, 'secondary'));
 		$this->addActionItem(new ActionItem('Delete', '/dreamcategory/delete/' . $id, 'danger'));
 
     	$this->getView()->title = 'View Dream Category';
@@ -107,7 +107,7 @@ class DreamcategoryController extends BaseController
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionEdit($id)
     {
 		$this->addBreadcrumb(new Breadcrumb('Edit', '', true));
 		$this->addActionItem(new ActionItem('Cancel', '/dreamcategory/view/' . $id, 'secondary'));

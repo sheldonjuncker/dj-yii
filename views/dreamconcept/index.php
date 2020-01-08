@@ -19,7 +19,7 @@ use yii\grid\GridView;
             ['class' => 'yii\grid\SerialColumn'],
             'id',
             'name',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => \app\components\gui\ActionColumn::class],
         ],
     ]); ?>
 </div>

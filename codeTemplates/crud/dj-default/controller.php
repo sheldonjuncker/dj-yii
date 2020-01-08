@@ -130,7 +130,7 @@ class <?= $controllerClass ?> extends BaseController
             return $this->redirect(['view', 'id' => $model->getId()]);
         }
 
-        return $this->render('create', [
+        return $this->render('_form', [
             'model' => $model,
         ]);
     }
@@ -154,7 +154,7 @@ class <?= $controllerClass ?> extends BaseController
             return $this->redirect(['view', 'id' => $model->getId()]);
         }
 
-        return $this->render('update', [
+        return $this->render('_form', [
             'model' => $model,
         ]);
     }

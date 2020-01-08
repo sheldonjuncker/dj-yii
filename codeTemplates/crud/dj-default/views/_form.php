@@ -25,7 +25,8 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="container <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
-
+	<br>
+	<h3><?='<?=$this->title?>'?></h3>
     <?= "<?php " ?>$form = ActiveForm::begin(); ?>
 
 <?php foreach ($generator->getColumnNames() as $attribute) {
