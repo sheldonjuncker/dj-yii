@@ -28,6 +28,7 @@ use yii\widgets\ActiveForm;
 		echo Select2::widget([
 			'name' => 'Concept[words]',
 			'data' => $wordData,
+			'value' => array_column($model->words, 'id'),
 			'options' => [
 				'placeholder' => 'Select words...',
 				'multiple' => true

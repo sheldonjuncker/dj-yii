@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\freud\Word;
 use Yii;
 use app\models\freud\Concept;
 use app\models\freud\ConceptSearch;
@@ -104,8 +105,36 @@ class DreamconceptController extends BaseController
 
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->getId()]);
+        $request = Yii::$app->request;
+        if($request->getIsPost())
+        {
+        	$post = Yii::$app->request->post();
+			$model->load($post);
+
+			$wordIds = $post['Concept']['words'] ?? '';
+			if($wordIds)
+			{
+				$model->unlinkAll('words', true);
+				foreach($wordIds as $wordId)
+				{
+					$word = Word::find()->andWhere(['id' => $wordId])->one();
+					if($word)
+					{
+						$model->link('words', $word);
+					}
+				}
+			}
+
+			if($model->save())
+			{
+				return $this->redirect(['view', 'id' => $model->getId()]);
+			}
+			else
+			{
+				print "<pre>";
+				print_r($model->getErrors());
+				die();
+			}
         }
 
         return $this->render('_form', [

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $name
+ * @property Word[] $words
  */
 class Concept extends \yii\db\ActiveRecord
 {
@@ -54,5 +55,15 @@ class Concept extends \yii\db\ActiveRecord
     public function getId()
 	{
 		return $this->id;
+	}
+
+	/**
+	 * Dream category relation.
+	 *
+	 * @return WordQuery
+	 */
+	public function getWords(): WordQuery
+	{
+		return $this->hasMany(Word::class, ['id' => 'word_id'])->viaTable('freud.word_to_concept', ['concept_id' => 'id']);
 	}
 }
