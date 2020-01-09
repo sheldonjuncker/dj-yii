@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "ramsey/uuid": "^2.9",
-        "clue/socket-raw": "1.4.1"
+        "clue/socket-raw": "1.4.1",
+        "kartik-v/yii2-widget-select2": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
