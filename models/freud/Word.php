@@ -51,4 +51,20 @@ class Word extends \yii\db\ActiveRecord
     {
         return new WordQuery(get_called_class());
     }
+
+	/**
+	 * Gets word ids mapped to words for form usage.
+	 *
+	 * @return array
+	 */
+    public static function getFormData(): array
+	{
+		$words = \app\models\freud\Word::find()->orderBy('word DESC')->all();
+		$wordData = [];
+		foreach($words as $word)
+		{
+			$wordData[$word->id] = $word->word;
+		}
+		return $wordData;
+	}
 }

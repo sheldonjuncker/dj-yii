@@ -18,16 +18,10 @@ use yii\widgets\ActiveForm;
 
 	<div class="form-group">
 		<?php
-		$words = \app\models\freud\Word::find()->orderBy('word DESC')->all();
-		$wordData = [];
-		foreach($words as $word)
-		{
-			$wordData[$word->id] = $word->word;
-		}
 		echo '<label class="control-label">Add Words</label>';
 		echo Select2::widget([
 			'name' => 'Concept[words]',
-			'data' => $wordData,
+			'data' => \app\models\freud\Word::getFormData(),
 			'value' => array_column($model->words, 'id'),
 			'options' => [
 				'placeholder' => 'Select words...',

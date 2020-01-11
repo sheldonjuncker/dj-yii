@@ -73,7 +73,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3">Manage Data</a>
+				<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3">Data</a>
 				<div id="submenu-3" class="collapse">
 					<ul class="nav nav-small flex-column">
 						<li class="nav-item">
@@ -82,8 +82,19 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/data/export">Export</a>
 						</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-3">Admin</a>
+				<div id="submenu-4" class="collapse">
+					<ul class="nav nav-small flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/dreamcategory">Dream Categories</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/dreamconcept">Dream Concept</a>
 						</li>
 					</ul>
 				</div>
