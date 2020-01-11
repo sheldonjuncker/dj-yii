@@ -81,9 +81,39 @@ class DreamconceptController extends BaseController
 
         $model = new Concept();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->getId()]);
-        }
+		$request = Yii::$app->request;
+		if($request->getIsPost())
+		{
+			$post = Yii::$app->request->post();
+			$model = new Concept();
+			$model->load($post);
+
+			if($model->save())
+			{
+				$wordIds = $post['Concept']['words'] ?? '';
+				if($wordIds)
+				{
+					foreach($wordIds as $wordId)
+					{
+						$word = Word::find()->andWhere(['id' => $wordId])->one();
+						if($word)
+						{
+							$model->link('words', $word);
+						}
+					}
+
+					$model->save();
+				}
+
+				return $this->redirect(['view', 'id' => $model->getId()]);
+			}
+			else
+			{
+				print "<pre>";
+				print_r($model->getErrors());
+				die();
+			}
+		}
 
         return $this->render('_form', [
             'model' => $model,

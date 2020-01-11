@@ -66,4 +66,19 @@
             </div>
         </div>
     </div>
+	<div class="row col-lg-12">
+		<div class="form-group">
+			<label>Concepts</label>
+			<div>
+				<?php
+				echo '<ul>';
+				foreach($dream->getConcepts() as $concept)
+				{
+					echo '<li>' . $concept->name . '</li>';
+				}
+				echo '</ul>';
+				?>
+			</div>
+		</div>
+	</div>
 </div>

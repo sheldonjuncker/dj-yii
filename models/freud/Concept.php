@@ -2,6 +2,7 @@
 
 namespace app\models\freud;
 
+use app\models\dj\Dream;
 use Yii;
 
 /**
@@ -65,5 +66,41 @@ class Concept extends \yii\db\ActiveRecord
 	public function getWords(): WordQuery
 	{
 		return $this->hasMany(Word::class, ['id' => 'word_id'])->viaTable('freud.word_to_concept', ['concept_id' => 'id']);
+	}
+
+	/**
+	 * Gets all of the dreams with this concept.
+	 * Dreams are ordered by relevance.
+	 *
+	 * @return Dream[]
+	 */
+	public function getDreams(): array
+	{
+		$sql = "
+			select
+				z.*
+			from
+			(
+				select
+					dream.*,
+					SUM(dwf.frequency) as 'freq'
+				from
+					dj.dream
+				inner join
+					freud.dream_word_freq dwf on dwf.dream_id = dream.id
+				inner join
+					freud.word_to_concept d2c on(
+						d2c.concept_id = :concept_id
+						and d2c.word_id = dwf.word_id
+					)
+				group by
+					dream.id
+			) z
+			order by
+				z.freq DESC
+			;
+		";
+
+		return Dream::findBySql($sql, [':concept_id' => $this->id])->all();
 	}
 }

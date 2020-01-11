@@ -36,5 +36,13 @@ use kartik\select2\Select2;
 			'disabled' => true
 		],
 	]);
+
+	echo '<label class="control-label">Dreams</label>';
+	echo "<ul>";
+	foreach($model->getDreams() as $dream)
+	{
+		echo "<li>" . $dream->getTitle() . "</li>";
+	}
+	echo "</ul>";
 	?>
 </div>
