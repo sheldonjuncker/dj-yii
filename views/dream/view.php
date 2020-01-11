@@ -81,4 +81,23 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row col-lg-12">
+		<div class="form-group">
+			<label>Similar Dreams</label>
+			<div>
+				<?php
+				echo '<ul>';
+				foreach($dream->findRelated() as $relatedDream)
+				{
+					if($dream->id !== $relatedDream->id)
+					{
+						echo '<li>' . $relatedDream->title . '</li>';
+					}
+				}
+				echo '</ul>';
+				?>
+			</div>
+		</div>
+	</div>
 </div>
