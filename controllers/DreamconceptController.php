@@ -9,6 +9,7 @@ use app\models\freud\ConceptSearch;
 use app\controllers\BaseController;
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -21,7 +22,17 @@ class DreamconceptController extends BaseController
      */
     public function behaviors()
     {
-        return [];
+        return [
+			'access' => [
+				'class' => AccessControl::class,
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['@'],
+					]
+				]
+			]
+		];
     }
 
 	public function beforeAction($action)
