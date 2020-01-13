@@ -21,16 +21,19 @@ class UserController extends BaseController
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
+        	'access' => [
+                'class' => AccessControl::class,
                 'rules' => [
+                	[
+                		'allow' => true,
+						'roles' => ['?', '@']
+					],
                     [
                         'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
+                        'allow' => false,
+                        'roles' => ['?'],
+                    ]
+                ]
             ]
         ];
     }

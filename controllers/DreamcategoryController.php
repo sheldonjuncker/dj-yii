@@ -15,13 +15,14 @@ use yii\filters\VerbFilter;
  */
 class DreamcategoryController extends BaseController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		$access = $this->getDefaultAccess();
+		return $access;
+	}
 
     public function beforeAction($action)
 	{

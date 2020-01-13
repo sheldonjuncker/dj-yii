@@ -7,7 +7,6 @@ use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
 use app\models\dj\DreamCategory;
 use app\models\dj\DreamType;
-use app\models\dj\DreamTypeQuery;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
@@ -19,20 +18,14 @@ use yii\filters\VerbFilter;
  */
 class DreamController extends BaseController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    //'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		$access = $this->getDefaultAccess();
+		return $access;
+	}
 
     public function beforeAction($action)
 	{

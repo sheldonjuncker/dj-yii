@@ -22,17 +22,8 @@ class DreamconceptController extends BaseController
      */
     public function behaviors()
     {
-        return [
-			'access' => [
-				'class' => AccessControl::class,
-				'rules' => [
-					[
-						'allow' => true,
-						'roles' => ['@'],
-					]
-				]
-			]
-		];
+    	$access = $this->getDefaultAccess();
+    	return $access;
     }
 
 	public function beforeAction($action)

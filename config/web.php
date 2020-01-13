@@ -25,6 +25,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\dj\User',
             'enableAutoLogin' => true,
+			'loginUrl' => ['user/login']
         ],
         'errorHandler' => [
             'errorAction' => 'user/error',

@@ -46,7 +46,14 @@ class DreamCategory{
 
 $(document).ready(function(){
 	let dc = new DreamCategory();
-	dc.init('Dream_categories');
+	$dreamCategoriesInput = $("#Dream_categories");
+
+	//Only run if the element is found
+	if($dreamCategoriesInput.length)
+	{
+		dc.init('Dream_categories');
+	}
+
 });
 
 export default DreamCategory

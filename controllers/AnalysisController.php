@@ -8,6 +8,15 @@ use app\components\gui\js\Script;
 
 class AnalysisController extends BaseController
 {
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		$access = $this->getDefaultAccess();
+		return $access;
+	}
+
 	public function beforeAction($action)
 	{
 		$this->getScriptRegistrar()->registerScript(new Script('chart.js', Script::POS_HEAD));
