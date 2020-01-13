@@ -60,13 +60,24 @@ class BaseController extends Controller
 	 */
 	public function getDefaultAccess(): array
 	{
+		return $this->getAccessByPermission(['@']);
+	}
+
+	/**
+	 * Gets access rules which lock down to a set of permissions.
+	 *
+	 * @param array $permissions
+	 * @return array
+	 */
+	public function getAccessByPermission(array $permissions): array
+	{
 		return [
 			'access' => [
 				'class' => AccessControl::class,
 				'rules' => [
 					[
 						'allow' => true,
-						'roles' => ['@'],
+						'roles' => $permissions,
 					]
 				]
 			]

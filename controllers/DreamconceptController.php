@@ -22,7 +22,7 @@ class DreamconceptController extends BaseController
      */
     public function behaviors()
     {
-    	$access = $this->getDefaultAccess();
+    	$access = $this->getAccessByPermission(['manageAdminData']);
     	return $access;
     }
 
