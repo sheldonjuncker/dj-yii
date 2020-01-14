@@ -10,6 +10,7 @@ use app\models\dj\DreamType;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -23,8 +24,27 @@ class DreamController extends BaseController
 	 */
 	public function behaviors()
 	{
-		$access = $this->getDefaultAccess();
-		return $access;
+		return [
+			'access' => [
+				'class' => AccessControl::class,
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['manageDream'],
+						'roleParams' => function() {
+							$dream = NULL;
+							$dreamId = Yii::$app->getRequest()->get('id');
+							if($dreamId)
+							{
+								$dreamId = Uuid::fromString($dreamId)->getBytes();
+								$dream = Dream::findOne(['id' => $dreamId]);
+							}
+							return ['dream' => $dream];
+						},
+					]
+				],
+			],
+		];
 	}
 
     public function beforeAction($action)
@@ -48,7 +68,7 @@ class DreamController extends BaseController
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
 
-    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->all();
+    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->whereUserId(Yii::$app->getUser()->getId())->all();
 
 		$dreamsByDay = [];
 
@@ -106,7 +126,7 @@ class DreamController extends BaseController
 		$this->addBreadcrumb(new Breadcrumb('New', '', true));
 
 		$dream = new Dream();
-		$dream->user_id = 1;
+		$dream->user_id = Yii::$app->getUser()->getId();
 
 		$request = Yii::$app->request;
 		if($request->getIsPost())

@@ -8,6 +8,7 @@ use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\PackageStore;
 use app\components\gui\js\Registrar;
+use app\models\dj\User;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -82,6 +83,16 @@ class BaseController extends Controller
 				]
 			]
 		];
+	}
+
+	/**
+	 * Gets the logged in user or NULL if there is none.
+	 *
+	 * @return User|null
+	 */
+	public function getUser(): ?User
+	{
+		return \Yii::$app->getUser()->getIdentity();
 	}
 
 	public function render($view, $params = [])

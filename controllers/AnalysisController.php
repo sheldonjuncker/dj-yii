@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\graph\DreamGraphData;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\Script;
+use yii\filters\AccessControl;
 
 class AnalysisController extends BaseController
 {
@@ -13,8 +14,17 @@ class AnalysisController extends BaseController
 	 */
 	public function behaviors()
 	{
-		$access = $this->getDefaultAccess();
-		return $access;
+		return [
+			'access' => [
+				'class' => AccessControl::class,
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['manageDream']
+					]
+				],
+			],
+		];
 	}
 
 	public function beforeAction($action)
@@ -30,7 +40,7 @@ class AnalysisController extends BaseController
 	{
 		$this->addBreadcrumb(new Breadcrumb('Dreams by Day of Week', '', true));
 
-		$dreamGraphData = new DreamGraphData();
+		$dreamGraphData = new DreamGraphData($this->getUser());
 		return $this->render('week', [
 			'dreamCountData' => $dreamGraphData->getDreamCountByDayOfWeek()
 		]);
@@ -40,7 +50,7 @@ class AnalysisController extends BaseController
 	{
 		$this->addBreadcrumb(new Breadcrumb('Dreams by Month', '', true));
 
-		$dreamGraphData = new DreamGraphData();
+		$dreamGraphData = new DreamGraphData($this->getUser());
 		return $this->render('month', [
 			'dreamCountData' => $dreamGraphData->getDreamCountByMonth()
 		]);
@@ -50,7 +60,7 @@ class AnalysisController extends BaseController
 	{
 		$this->addBreadcrumb(new Breadcrumb('Dreams by Category', '', true));
 
-		$dreamGraphData = new DreamGraphData();
+		$dreamGraphData = new DreamGraphData($this->getUser());
 		return $this->render('category', [
 			'dreamCountData' => $dreamGraphData->getDreamCountByCategory()
 		]);

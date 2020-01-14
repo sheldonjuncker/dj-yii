@@ -46,10 +46,10 @@ class DreamCategory{
 
 $(document).ready(function(){
 	let dc = new DreamCategory();
-	$dreamCategoriesInput = $("#Dream_categories");
+	let $dreamCategoriesInput = $("#Dream_categories");
 
 	//Only run if the element is found
-	if($dreamCategoriesInput.length)
+	if($dreamCategoriesInput !== undefined && $dreamCategoriesInput.length)
 	{
 		dc.init('Dream_categories');
 	}

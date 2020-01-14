@@ -22,6 +22,16 @@ class DreamQuery extends \yii\db\ActiveQuery
 		]);
 	}
 
+	public function whereUserId(int $id): self
+	{
+		return $this->andWhere(['user_id' => $id]);
+	}
+
+	public function whereUser(User $user)
+	{
+		return $this->whereUserId($user->getId());
+	}
+
     /*public function active()
     {
         return $this->andWhere('[[status]]=1');

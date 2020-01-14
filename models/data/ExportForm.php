@@ -3,10 +3,14 @@
 namespace app\models\data;
 
 use app\models\dj\Dream;
+use app\models\dj\User;
 use yii\base\Model;
 
 class ExportForm extends Model
 {
+	/** @var  User|null $user */
+	public $user;
+
 	public $format;
 	public $start_date;
 	public $end_date;
@@ -33,7 +37,15 @@ class ExportForm extends Model
 	{
 		$startDate = $this->start_date ?: 0;
 		$endDate = $this->end_date ?: time();
-		return Dream::find()->dreamtBetween($startDate, $endDate)->orderBy('dreamt_at DESC')->all();
+		$query = Dream::find()->dreamtBetween($startDate, $endDate)->orderBy('dreamt_at DESC');
+
+		//If a user is set, limit to their dreams
+		if($this->user)
+		{
+			$query->whereUser($this->user);
+		}
+
+		return $query->all();
 	}
 
 	/**
