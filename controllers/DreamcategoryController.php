@@ -7,8 +7,6 @@ use app\components\gui\Breadcrumb;
 use Yii;
 use app\models\dj\DreamCategory;
 use app\models\dj\DreamCategorySearch;
-use app\controllers\BaseController;
-use yii\base\Action;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -17,20 +15,14 @@ use yii\filters\VerbFilter;
  */
 class DreamcategoryController extends BaseController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    //'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		$access = $this->getDefaultAccess();
+		return $access;
+	}
 
     public function beforeAction($action)
 	{
@@ -77,7 +69,7 @@ class DreamcategoryController extends BaseController
     {
 		$this->addBreadcrumb(new Breadcrumb('View', '', true));
 
-		$this->addActionItem(new ActionItem('Edit', '/dreamcategory/update/' . $id, 'secondary'));
+		$this->addActionItem(new ActionItem('Edit', '/dreamcategory/edit/' . $id, 'secondary'));
 		$this->addActionItem(new ActionItem('Delete', '/dreamcategory/delete/' . $id, 'danger'));
 
     	$this->getView()->title = 'View Dream Category';
@@ -116,7 +108,7 @@ class DreamcategoryController extends BaseController
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionEdit($id)
     {
 		$this->addBreadcrumb(new Breadcrumb('Edit', '', true));
 		$this->addActionItem(new ActionItem('Cancel', '/dreamcategory/view/' . $id, 'secondary'));

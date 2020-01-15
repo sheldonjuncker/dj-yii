@@ -2,6 +2,7 @@
 
 namespace app\models\dj;
 
+use app\models\freud\Concept;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use yii\db\ActiveQuery;
@@ -163,5 +164,98 @@ class Dream extends \yii\db\ActiveRecord
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Gets all of the concepts that the dream contains ordered by relevance.
+	 *
+	 * @return Concept[]
+	 */
+	public function getConcepts(): array
+	{
+		$sql = "
+			select
+				z.*
+			from
+			(
+				select
+					concept.*,
+					SUM(dwf.frequency) as 'freq'
+				from
+					freud.concept
+				inner join
+					freud.word_to_concept w2c on w2c.concept_id = concept.id
+				inner join
+					freud.dream_word_freq dwf on(
+						dwf.dream_id = :dream_id
+						and w2c.word_id = dwf.word_id
+					)
+				group by
+					concept.id
+			) z
+			order by
+				z.freq DESC
+			;
+		";
+
+		return Concept::findBySql($sql, [':dream_id' => $this->id])->all();
+	}
+
+	/**
+	 * Finds related dreams based on the concepts in this dream.
+	 *
+	 * @return Dream[]
+	 */
+	public function findRelated(): array
+	{
+		$concepts = $this->getConcepts();
+		return self::findByConcepts($concepts)->all();
+	}
+
+	/**
+	 * Finds dreams by multiple concepts.
+	 * This is useful for related dreams.
+	 *
+	 * @param Concept[] $concepts
+	 * @return DreamQuery
+	 */
+	public static function findByConcepts(array $concepts): DreamQuery
+	{
+		$conceptIds = array_column($concepts, 'id');
+
+		//If there aren't any concepts, use -1 so that we usage is consistent
+		if(!$conceptIds)
+		{
+			$conceptIds = [-1];
+		}
+
+		$conceptIdsSql = implode(', ', $conceptIds);
+
+		$sql = "
+			select
+				z.*
+			from
+			(
+				select
+					dream.*,
+					SUM(dwf.frequency) as 'freq'
+				from
+					dj.dream
+				inner join
+					freud.dream_word_freq dwf on dwf.dream_id = dream.id
+				inner join
+					freud.word_to_concept d2c on(
+						d2c.concept_id IN($conceptIdsSql)
+						and d2c.word_id = dwf.word_id
+					)
+				group by
+					dream.id
+			) z
+			order by
+				z.freq DESC
+			;
+		";
+
+		return Dream::findBySql($sql);
 	}
 }

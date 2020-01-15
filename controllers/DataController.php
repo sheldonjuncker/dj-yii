@@ -11,6 +11,7 @@ use app\models\dj\DreamCategory;
 use app\models\dj\DreamType;
 use app\utilities\date\MysqlFormatter;
 use yii\db\Exception;
+use yii\filters\AccessControl;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use yii\web\UploadedFile;
@@ -29,7 +30,17 @@ class DataController extends BaseController
 	 */
 	public function behaviors()
 	{
-		return [];
+		return [
+			'access' => [
+				'class' => AccessControl::class,
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['manageDream']
+					]
+				],
+			],
+		];
 	}
 
 	public function beforeAction($action)
@@ -44,6 +55,7 @@ class DataController extends BaseController
 		$this->addBreadcrumb(new Breadcrumb('Export', '', true));
 
 		$exportForm = new ExportForm();
+		$exportForm->user = $this->getUser();
 
 		$request = \Yii::$app->request;
 		if($request->getIsPost())
@@ -113,6 +125,10 @@ class DataController extends BaseController
 					{
 						$dream = new Dream();
 						$dream->attributes = $dreamAttributes;
+
+						//In the future, a scientist might be able to add dreams for users they manage
+						$dream->user_id = $this->getUser()->getId();
+
 						$dream->setId($dream->id);
 
 						$dream->updated_at = MysqlFormatter::toMysql($dream->updated_at);

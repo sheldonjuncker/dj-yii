@@ -12,7 +12,8 @@ class SearchController extends BaseController
 	 */
 	public function behaviors()
 	{
-		return [];
+		$access = $this->getDefaultAccess();
+		return $access;
 	}
 
 	public function beforeAction($action)

@@ -12,6 +12,9 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+    	'authManager' => [
+    		'class' => 'yii\rbac\DbManager'
+		],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'bTRZcTuSFBTMaP_FqxztPLlfiBZBTR1s',
@@ -22,6 +25,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\dj\User',
             'enableAutoLogin' => true,
+			'loginUrl' => ['user/login']
         ],
         'errorHandler' => [
             'errorAction' => 'user/error',
@@ -84,6 +88,14 @@ if (YII_ENV_DEV) {
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
+		'generators' => [ //here
+			'crud' => [ // generator name
+				'class' => 'yii\gii\generators\crud\Generator',
+				'templates' => [
+					'Dream Journal Default' => '@app/codeTemplates/crud/dj-default'
+				]
+			]
+		],
     ];
 }
 

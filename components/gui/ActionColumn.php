@@ -8,6 +8,21 @@ use yii\helpers\Html;
 
 class ActionColumn extends \yii\grid\ActionColumn
 {
+	public $template = '{view} {edit} {delete}';
+
+	/**
+	 * Initializes the default button rendering callbacks.
+	 */
+	protected function initDefaultButtons()
+	{
+		$this->initDefaultButton('view', 'eye-open');
+		$this->initDefaultButton('edit', 'pencil');
+		$this->initDefaultButton('delete', 'trash', [
+			'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+			'data-method' => 'post',
+		]);
+	}
+
 	/**
 	 * Overridden to avoid issues with Bootstrap 4 not coming with glyph icons.
 	 *
@@ -25,8 +40,8 @@ class ActionColumn extends \yii\grid\ActionColumn
 						$title = Yii::t('yii', 'View');
 						$buttonClass = "btn-primary";
 						break;
-					case 'update':
-						$title = Yii::t('yii', 'Update');
+					case 'edit':
+						$title = Yii::t('yii', 'Edit');
 						$buttonClass = "btn-warning";
 						break;
 					case 'delete':

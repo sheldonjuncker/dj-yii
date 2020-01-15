@@ -8,6 +8,8 @@ use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\PackageStore;
 use app\components\gui\js\Registrar;
+use app\models\dj\User;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class BaseController extends Controller
@@ -49,6 +51,48 @@ class BaseController extends Controller
 	public function addActionItem(ActionItem $actionItem)
 	{
 		$this->actionItems[] = $actionItem;
+	}
+
+	/**
+	 * Gets the default controller access which limits the interface
+	 * to logged in users.
+	 *
+	 * @return array
+	 */
+	public function getDefaultAccess(): array
+	{
+		return $this->getAccessByPermission(['@']);
+	}
+
+	/**
+	 * Gets access rules which lock down to a set of permissions.
+	 *
+	 * @param array $permissions
+	 * @return array
+	 */
+	public function getAccessByPermission(array $permissions): array
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::class,
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => $permissions,
+					]
+				]
+			]
+		];
+	}
+
+	/**
+	 * Gets the logged in user or NULL if there is none.
+	 *
+	 * @return User|null
+	 */
+	public function getUser(): ?User
+	{
+		return \Yii::$app->getUser()->getIdentity();
 	}
 
 	public function render($view, $params = [])

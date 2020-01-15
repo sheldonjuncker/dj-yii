@@ -2,8 +2,24 @@
 
 namespace app\components\graph;
 
+use app\models\dj\User;
+
 class DreamGraphData
 {
+	/** @var  User|null $user */
+	protected $user;
+
+	/**
+	 * Pass in a user to limit to his dream data.
+	 * Pass in NULL to query all users.
+	 *
+	 * @param User|null $user
+	 */
+	public function __construct(?User $user)
+	{
+		$this->user = $user;
+	}
+
 	/**
 	 * Gets all dream counts on each day of the week for analysis/charts.
 	 *
@@ -17,6 +33,8 @@ class DreamGraphData
 				COUNT(dream.id) AS 'count'
 			FROM
 				dj.dream dream
+		  	WHERE
+		  		{$this->getUserCondition()}
 			GROUP BY
 				DAYNAME(dream.dreamt_at)
 			ORDER BY
@@ -45,6 +63,8 @@ class DreamGraphData
 				COUNT(dream.id) AS 'count'
 			FROM
 				dj.dream dream
+			WHERE
+		  		{$this->getUserCondition()}
 			GROUP BY
 				YEAR(dream.dreamt_at), MONTHNAME(dream.dreamt_at)
 			ORDER BY
@@ -72,6 +92,8 @@ class DreamGraphData
 				dj.dream_to_dream_category d2cat ON d2cat.dream_id = dream.id
 			INNER JOIN
 				dj.dream_category cat ON cat.id = d2cat.category_id
+			WHERE
+		  		{$this->getUserCondition()}
 			GROUP BY
 				cat.id
 			ORDER BY
@@ -85,5 +107,22 @@ class DreamGraphData
 			$dreamCountDataByDay[$row['name']] = $row['count'];
 		}
 		return $dreamCountDataByDay;
+	}
+
+	/**
+	 * Gets the condition to use in the SQL to limit to a specific user's dreams.
+	 *
+	 * @return string
+	 */
+	protected function getUserCondition(): string
+	{
+		if($this->user)
+		{
+			return 'dream.user_id = ' . $this->user->getId();
+		}
+		else
+		{
+			return '1';
+		}
 	}
 }

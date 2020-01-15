@@ -12,39 +12,30 @@
 				<a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<img alt="Image" src="/dist/assets/img/avatar-male-4.jpg" class="avatar" />
 				</a>
+				<?php
+				if(!Yii::$app->getUser()->getIsGuest())
+				{
+				?>
 				<div class="dropdown-menu dropdown-menu-right">
-					<a href="nav-side-user.html" class="dropdown-item">Profile</a>
-					<a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
-					<a href="#" class="dropdown-item">Log Out</a>
+					<a href="#" class="dropdown-item"><?=Yii::$app->getUser()->getIdentity()->name ?? 'Anonymous'?>'s Profile</a>
+					<a href="/user/logout" class="dropdown-item">Log Out</a>
 				</div>
+				<?php
+				}
+				?>
 			</div>
 		</div>
 	</div>
 
-	<!--
-  <hr>
-  <div>
-	  <div class="dropdown mt-2">
-		<button class="btn btn-primary btn-block dropdown-toggle" type="button" id="newContentButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		  Add New
-		</button>
-		<div class="dropdown-menu">
-		  <a class="dropdown-item" href="#">Dream</a>
-		  <a class="dropdown-item" href="#">Dream DreamCategory</a>
-		  <a class="dropdown-item" href="#">Dream Tag</a>
-		</div>
-	  </div>
-  </div>
-  <hr>
-  -->
-
 	<div class="collapse navbar-collapse flex-column" id="navbar-collapse">
 		<ul class="navbar-nav d-lg-block">
-
 			<li class="nav-item">
 				<a class="nav-link" href="/dream">Home</a>
 			</li>
-
+		<?php
+		if(!Yii::$app->getUser()->getIsGuest())
+		{
+			?>
 			<li class="nav-item">
 				<a class="nav-link" href="/dream">My Dreams</a>
 			</li>
@@ -73,7 +64,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3">Manage Data</a>
+				<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3">Data</a>
 				<div id="submenu-3" class="collapse">
 					<ul class="nav nav-small flex-column">
 						<li class="nav-item">
@@ -82,11 +73,52 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/data/export">Export</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/dreamcategory">Dream Categories</a>
-						</li>
 					</ul>
 				</div>
+			</li>
+
+			<?php
+			if(Yii::$app->getUser()->can('manageAdminData'))
+			{
+				?>
+				<li class="nav-item">
+					<a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-3">Admin</a>
+					<div id="submenu-4" class="collapse">
+						<ul class="nav nav-small flex-column">
+							<li class="nav-item">
+								<a class="nav-link" href="/dreamcategory">Dream Categories</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/dreamconcept">Dream Concept</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<?php
+			}
+			?>
+
+			<?php
+		}
+		else
+		{
+			?>
+			<li class="nav-item">
+				<a class="nav-link" href="/user/login">Login</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="/user/register">Register</a>
+			</li>
+			<?php
+		}
+		?>
+			<li class="nav-item">
+				<a class="nav-link" href="#">About</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="#">Contact</a>
 			</li>
 		</ul>
 		<hr>
@@ -94,29 +126,35 @@
 			<span class="text-small text-muted">Quick Links</span>
 			<ul class="nav nav-small flex-column mt-2">
 				<li class="nav-item">
-					<a href="nav-side-team.html" class="nav-link">Lucid Dreams</a>
+					<a href="#" class="nav-link">Lucid Dreams</a>
 				</li>
 				<li class="nav-item">
-					<a href="nav-side-team.html" class="nav-link">etc</a>
+					<a href="#" class="nav-link">etc</a>
 				</li>
 			</ul>
 			<hr>
 		</div>
 	</div>
 
+<?php
+if(!Yii::$app->getUser()->getIsGuest())
+{
+	?>
 	<div class="d-none d-lg-block">
 		<div class="dropup">
 			<a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<img alt="Image" src="/dist/assets/img/avatar-male-4.jpg" class="avatar" />
+				<img alt="Image" src="/dist/assets/img/avatar-male-4.jpg" class="avatar"/>
 			</a>
 			<div class="dropdown-menu">
-				<a href="nav-side-user.html" class="dropdown-item"><?=Yii::$app->getUser()->getIdentity()->name ?? 'Anonymous'?>'s Profile</a>
-				<a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
+				<a href="#" class="dropdown-item"><?= Yii::$app->getUser()->getIdentity()->name ?? 'Anonymous' ?>'s
+					Profile</a>
 				<a href="/user/logout" class="dropdown-item">Log Out</a>
 			</div>
 		</div>
 	</div>
-
+	<?php
+}
+?>
 </div>
 
 <!--End of Navbar-->
