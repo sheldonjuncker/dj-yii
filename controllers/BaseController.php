@@ -1,13 +1,13 @@
 <?php
 
-
 namespace app\controllers;
-
 
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
 use app\components\gui\js\PackageStore;
 use app\components\gui\js\Registrar;
+use app\components\gui\flash\FlashContainer;
+use app\components\gui\flash\IFlash;
 use app\models\dj\User;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -23,6 +23,9 @@ class BaseController extends Controller
 	/** @var Registrar $scriptRegistrar */
 	protected $scriptRegistrar = NULL;
 
+	/** @var FlashContainer $flashContainer  */
+	protected $flashContainer = NULL;
+
 	public function __construct($id, $module, $config = [])
 	{
 		parent::__construct($id, $module, $config);
@@ -36,6 +39,12 @@ class BaseController extends Controller
 		$this->getScriptRegistrar()->registerPackage(
 			$packageStore->getBootstrapPackage()
 		);
+
+		//Load the flash container from the session
+		$session = \Yii::$app->getSession();
+		$flashContainer = $session->get('flashContainer') ?? new FlashContainer();
+		$this->flashContainer = $flashContainer;
+		$session->set('flashContainer', $flashContainer);
 	}
 
 	public function getScriptRegistrar(): Registrar
@@ -51,6 +60,19 @@ class BaseController extends Controller
 	public function addActionItem(ActionItem $actionItem)
 	{
 		$this->actionItems[] = $actionItem;
+	}
+
+	public function addFlashes(array $flashes)
+	{
+		foreach($flashes as $flash)
+		{
+			$this->addFlash($flash);
+		}
+	}
+
+	public function addFlash(IFlash $flash)
+	{
+		$this->flashContainer->addFlash($flash);
 	}
 
 	/**
@@ -102,6 +124,7 @@ class BaseController extends Controller
 		$this->view->params['bodyScripts'] = $this->getScriptRegistrar()->getBodyScripts();
 		$this->view->params['breadcrumbs'] = $this->breadcrumbs;
 		$this->view->params['actionItems'] = $this->actionItems;
+		$this->view->params['flashContainer'] = $this->flashContainer;
 
 		return parent::render($view, $params);
 	}

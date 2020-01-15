@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\gui\ActionItem;
 use app\components\gui\Breadcrumb;
+use app\components\gui\flash\Flash;
 use app\components\gui\js\Script;
 use app\models\dj\DreamCategory;
 use app\models\dj\DreamType;
@@ -169,7 +170,12 @@ class DreamController extends BaseController
 						$dream->save();
 					}
 
+					$this->addFlash(new Flash('Dream saved.', Flash::SUCCESS));
 					return $this->redirect(['view', 'id' => $dream->getId()]);
+				}
+				else
+				{
+					$this->addFlash(new Flash('Dream failed to save.', Flash::FAILURE));
 				}
 			}
 		}
@@ -247,7 +253,12 @@ class DreamController extends BaseController
 
 				if($dream->save())
 				{
+					$this->addFlash(new Flash('Dream updated.', Flash::SUCCESS));
 					return $this->redirect(['view', 'id' => $dream->getId()]);
+				}
+				else
+				{
+					$this->addFlash(new Flash('Dream failed to update.', Flash::FAILURE));
 				}
 			}
 		}
@@ -269,9 +280,16 @@ class DreamController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        if($this->findModel($id)->delete())
+		{
+			$this->addFlash(new Flash('Dream deleted.', Flash::SUCCESS));
+			return $this->redirect(['index']);
+		}
+		else
+		{
+			$this->addFlash(new Flash('Failed to delete dream.', Flash::FAILURE));
+			return $this->redirect(['view', 'id' => $id]);
+		}
     }
 
     /**

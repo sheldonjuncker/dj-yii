@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
@@ -9,6 +10,7 @@ $headerScripts = $this->params['headerScripts'] ?? [];
 $bodyScripts = $this->params['bodyScripts'] ?? [];
 $breadcrumbs = $this->params['breadcrumbs'] ?? [];
 $actionItems = $this->params['actionItems'] ?? [];
+$flashContainer = $this->params['flashContainer'] ?? new \app\components\gui\flash\FlashContainer();
 
 $this->beginPage()
 ?>
@@ -65,6 +67,22 @@ $this->beginPage()
                 }
 ?>
 			</div>
+		</div>
+		<div class="flash-container">
+			<?php
+			foreach($flashContainer->getFlashes() as $flash)
+			{
+				?>
+				<div class="alert alert-<?=$flash->getHtmlClass()?> alert-dismissible fade show" role="alert">
+					<?=$flash->getMessage()?>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    					<span aria-hidden="true">&times;</span>
+  					</button>
+				</div>
+				<?php
+				$flashContainer->removeFlash($flash);
+			}
+			?>
 		</div>
 		<?= $content ?>
 	</div>
