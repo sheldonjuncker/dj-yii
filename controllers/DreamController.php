@@ -55,6 +55,16 @@ class DreamController extends BaseController
 			new Script('tagsinput/tagsinput-typeahead.js')
 		);
 
+		//Register Vue for dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('vue/vue.js')
+		);
+
+		//Register dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('dream/comments.js')
+		);
+
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 
 		return parent::beforeAction($action);

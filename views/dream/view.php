@@ -100,4 +100,50 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row col-lg-12">
+		<div class="form-group">
+			<label>Comments</label>
+			<div id="dream-comment-app">
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addCommentModal">
+					Add comment
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="addCommentModalLabel">Dream Comment</h5>
+							</div>
+							<div class="modal-body">
+								{{ message }}
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary">Add</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="dream comments-container">
+					<ul>
+						<li v-for="comment in comments" class="dream comment">
+							<div>
+								<b>{{ comment.author }}</b>
+							</div>
+							<div>
+								<i>{{ comment.date }}</i>
+							</div>
+							<div>
+								<p>{{ comment.text }}</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
