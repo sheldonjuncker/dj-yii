@@ -4,12 +4,17 @@ from freud import Freud
 
 # Jung searches for dreams and gives you answers
 class Jung:
-    def search(self, terms):
+    def search(self, search_text, user_id=None):
         f = Freud()
-        tokens = f.process_sentence(terms)
+        tokens = f.process_sentence(search_text)
         search_terms = []
         for token in tokens:
             search_terms.append(token[1])
+
+        if user_id is not None:
+            user_condition = "dream.user_id = " + user_id
+        else:
+            user_condition = "1"
 
         # Build unions for query to get all dreams containing a search term
         sql = """
@@ -40,6 +45,10 @@ SELECT
     SUM(z.frequency) AS total_frequency
 FROM
 """ + sql + """ z
+INNER JOIN
+    dj.dream ON dream.id = z.dream_id
+WHERE
+    """ + user_condition + """
 GROUP BY
     dream_id
 ORDER BY
