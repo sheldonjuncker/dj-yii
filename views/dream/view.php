@@ -118,11 +118,16 @@
 								<h5 class="modal-title" id="addCommentModalLabel">Dream Comment</h5>
 							</div>
 							<div class="modal-body">
-								{{ message }}
+								<div class="form">
+									<div class="form-group">
+										<label for="dream-comment">Comment</label>
+										<textarea id="dream-comment" class="form-control" rows="6" v-model="newComment">{{ newComment }}</textarea>
+									</div>
+								</div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Add</button>
+								<button type="button" class="btn btn-primary" v-on:click="addComment">Add</button>
 							</div>
 						</div>
 					</div>

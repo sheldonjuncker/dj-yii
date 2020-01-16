@@ -2,19 +2,19 @@ $(document).ready(function(){
 	let dreamCommentApp = new Vue({
 		el: '#dream-comment-app',
 		data: {
-			message: 'Hello, world!',
-			comments: [
-				{
+			newComment: '',
+			comments: []
+		},
+		methods: {
+			addComment: function () {
+				let now = new Date();
+				this.comments.push({
 					'author': 'Sheldon Juncker',
-					'date': '11/25/1994',
-					'text': 'Hello, world!'
-				},
-				{
-					'author': 'Your Therapist',
-					'date': '11/25/1994',
-					'text': 'Bye.'
-				}
-			]
+					'date': now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate(),
+					'text':  this.newComment
+				});
+				this.newComment = '';
+			}
 		}
 	});
 });
