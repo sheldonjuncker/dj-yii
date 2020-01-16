@@ -9,7 +9,11 @@ use yii\web\NotFoundHttpException;
 
 class DreamForm extends \yii\base\Model
 {
+	/** @var string $search The search text */
 	public $search;
+
+	/** @var int|null $user_id Optional user id */
+	public $user_id;
 
 	/**
 	 * @return array the validation rules.
@@ -52,7 +56,12 @@ class DreamForm extends \yii\base\Model
 				throw new NotFoundHttpException('Failed to connect to Jung.');
 			}
 
-			if(!$student->write($this->search))
+			$data = [
+				'search_text' => $this->search,
+				'user_id' => $this->user_id
+			];
+			$jsonData = json_encode($data, JSON_PRETTY_PRINT);
+			if(!$student->write($jsonData))
 			{
 				throw new BadRequestHttpException('Failed to send message to Jung.');
 			}

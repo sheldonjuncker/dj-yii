@@ -4,7 +4,7 @@ import json
 
 
 async def handle_request(reader, writer):
-    data = await reader.read(256)
+    data = await reader.read(512)
 
     if not data:
         response = {
@@ -13,16 +13,17 @@ async def handle_request(reader, writer):
             'data': None
         }
     else:
-        search = data.decode()
-        print("searching for: " + search)
+        search = json.loads(data.decode())
+
+        print("searching for: " + data.decode())
         j = Jung()
         response = {
             'code': 200,
             'error': None,
-            'data': j.search(search)
+            'data': j.search(search['search_text'], search['user_id'])
         }
 
-    json_response = json.dumps(response);
+    json_response = json.dumps(response)
     print('sending: ' + json_response)
     writer.write(json_response.encode())
     await writer.drain()

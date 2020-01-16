@@ -36,6 +36,7 @@ class SearchController extends BaseController
 	public function actionSearch()
 	{
 		$dreamForm = new DreamForm();
+		$dreamForm->user_id = $this->getUser()->getId();
 		$dreamForm->load(\Yii::$app->request->get());
 
 		$this->getView()->title = 'Search Results';
