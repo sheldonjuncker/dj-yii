@@ -44,6 +44,7 @@
 			</div>
 		</div>
 	</div>
+	<hr>
     <div class="row col-lg-12">
         <div class="form-group">
             <label>Dream Categories</label>
@@ -66,6 +67,7 @@
             </div>
         </div>
     </div>
+	<hr>
 	<div class="row col-lg-12">
 		<div class="form-group">
 			<label>Concepts</label>
@@ -81,7 +83,7 @@
 			</div>
 		</div>
 	</div>
-
+	<hr>
 	<div class="row col-lg-12">
 		<div class="form-group">
 			<label>Similar Dreams</label>
@@ -100,55 +102,42 @@
 			</div>
 		</div>
 	</div>
-
+	<hr>
 	<div class="row col-lg-12">
-		<div class="form-group">
-			<label>Comments</label>
-			<div id="dream-comment-app">
-				<!-- Button trigger modal -->
-				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addCommentModal">
-					Add comment
-				</button>
-
-				<!-- Modal -->
-				<div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="addCommentModalLabel">Dream Comment</h5>
-							</div>
-							<div class="modal-body">
-								<div class="form">
-									<div class="form-group">
-										<label for="dream-comment">Comment</label>
-										<textarea id="dream-comment" class="form-control" rows="6" v-model="newComment">{{ newComment }}</textarea>
-									</div>
+		<label>Comments</label>
+		<div id="dream-comment-app" class="col-lg-12">
+			<!-- Dream Comment Modal -->
+			<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="commentModalLabel">Dream Comment</h5>
+						</div>
+						<div class="modal-body">
+							<div class="form">
+								<div class="form-group">
+									<label for="dream-comment">Comment</label>
+									<textarea id="dream-comment" class="form-control" rows="6" v-model="text">{{ text }}</textarea>
 								</div>
 							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" v-on:click="addComment">Add</button>
-							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" v-on:click="saveComment" data-dismiss="modal">{{ buttonTitle }}</button>
 						</div>
 					</div>
 				</div>
-
-				<div class="dream comments-container">
-					<ul>
-						<li v-for="comment in comments" class="dream comment">
-							<div>
-								<b>{{ comment.author }}</b>
-							</div>
-							<div>
-								<i>{{ comment.date }}</i>
-							</div>
-							<div>
-								<p>{{ comment.text }}</p>
-							</div>
-						</li>
-					</ul>
-				</div>
 			</div>
+			<!-- End of Modal -->
+			<div class="dream comments-container">
+				<comment
+						v-for="comment in comments"
+						v-bind:comment="comment"
+						v-bind:key="comment.id"
+				></comment>
+			</div>
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-success" data-toggle="modal" v-on:click="newComment">Add comment</button>
 		</div>
 	</div>
 </div>
