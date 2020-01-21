@@ -107,11 +107,11 @@
 		<label>Comments</label>
 		<div id="dream-comment-app" class="col-lg-12">
 			<!-- Dream Comment Modal -->
-			<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+			<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="commentModalLabel">Dream Comment</h5>
+							<h5 class="modal-title" id="commentModalLabel">{{ title }}</h5>
 						</div>
 						<div class="modal-body">
 							<div class="form">
@@ -130,14 +130,25 @@
 			</div>
 			<!-- End of Modal -->
 			<div class="dream comments-container">
-				<comment
-						v-for="comment in comments"
-						v-bind:comment="comment"
-						v-bind:key="comment.id"
-				></comment>
+				<div v-for="comment in comments" class="dream comment row">
+					<div class="col-lg-8">
+						<b>{{ comment.author }}</b>
+					</div>
+					<div class="col-lg-4">
+						<i>{{ comment.date }}</i>
+					</div>
+					<div class="col-lg-12">
+						<p>{{ comment.text }}</p>
+						<input type="hidden" :name="'Dream[comment][' + comment.id + ']'" :value="comment.text" :id="'DreamComment_' + comment.id" />
+					</div>
+					<div class="col-lg-12">
+						<button class="btn btn-sm btn-warning" v-on:click="editComment(comment.id)">Edit</button>
+						<button class="btn btn-sm btn-danger" v-on:click="deleteComment(comment.id)">Delete</button>
+					</div>
+				</div>
 			</div>
 			<!-- Button trigger modal -->
-			<button type="button" class="btn btn-success" data-toggle="modal" v-on:click="newComment">Add comment</button>
+			<button type="button" class="btn btn-success" v-on:click="newComment">Add comment</button>
 		</div>
 	</div>
 </div>

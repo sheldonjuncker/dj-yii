@@ -1,26 +1,4 @@
 $(document).ready(function(){
-	Vue.component('comment', {
-		props: ['comment'],
-		template: `
-			<div class="dream comment row">
-				<div class="col-lg-8">
-					<b>{{ comment.author }}</b>
-				</div>
-				<div class="col-lg-4">
-					<i>{{ comment.date }}</i>
-				</div>
-				<div class="col-lg-12">
-					<p>{{ comment.text }}</p>
-					<input type="hidden" :name="'Dream[comment][' + comment.id + ']'" :value="comment.text" :id="'DreamComment_' + comment.id" />
-				</div>
-				<div class="col-lg-12">
-					<button class="btn btn-sm btn-warning" v-on:click="editComment('{{ comment.id }}')">Edit</button>
-					<button class="btn btn-sm btn-danger">Delete</button>
-				</div>
-			</div>
-		`
-	});
-
 	let dreamCommentApp = new Vue({
 		el: '#dream-comment-app',
 		data: {
@@ -44,15 +22,16 @@ $(document).ready(function(){
 				this.resetModalOptions();
 				this.mode = 'new';
 				this.setModalOptions();
-				$('#commentModel').modal('show');
+				$('#commentModal').modal('show');
 			},
 
 			editComment: function(commentId) {
+				this.resetModalOptions();
 				this.mode = 'edit';
 				this.text = $('#DreamComment_' + commentId).val();
-				this.commentId = comentId;
+				this.commentId = commentId;
 				this.setModalOptions();
-				$('#commentModel').modal('show');
+				$('#commentModal').modal('show');
 			},
 
 			resetModalOptions: function () {
@@ -94,6 +73,10 @@ $(document).ready(function(){
 				}
 				this.resetModalOptions();
 			},
+
+			deleteComment: function(commentId) {
+				$('#DreamComment_' + commentId).parent().parent().remove();
+			}
 		}
 	});
 });
