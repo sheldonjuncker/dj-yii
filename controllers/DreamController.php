@@ -7,6 +7,7 @@ use app\components\gui\Breadcrumb;
 use app\components\gui\flash\Flash;
 use app\components\gui\js\Script;
 use app\models\dj\DreamCategory;
+use app\models\dj\DreamComment;
 use app\models\dj\DreamType;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
@@ -258,6 +259,21 @@ class DreamController extends BaseController
 					{
 						$dream->link('types', $dreamType);
 					}
+				}
+
+				//Remove all previous comments
+				$dream->unlinkAll('comments', true);
+
+				//Add new comments
+				$dreamComments = $postData['comment'] ?? [];
+				foreach($dreamComments as $commentId => $commentText)
+				{
+					$dreamComment = new DreamComment();
+					$dreamComment->setId(Uuid::uuid1()->toString());
+					$dreamComment->description = $commentText;
+					$dreamComment->setUserId($this->getUser()->getId());
+					$dreamComment->setDreamId($dream->getId());
+					$dream->link('comments', $dreamComment);
 				}
 
 				if($dream->save())

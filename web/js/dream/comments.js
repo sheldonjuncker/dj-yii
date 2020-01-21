@@ -8,14 +8,20 @@ $(document).ready(function(){
 			buttonTitle: '',
 			commentId: '',
 			mode: '', // new|edit
-			comments: [
-				{
-					'id': 0,
-					'author': 'Sheldon Juncker',
-					'date': '11.25.1994',
-					'text':  'Hello, world!'
+			comments: []
+		},
+		mounted: function () {
+			let self = this;
+			$.ajax({
+				url: '/dreamcomment?dreamId=' + $('#Dream_id').val(),
+				method: 'GET',
+				success: function (data) {
+					self.comments = data;
+				},
+				error: function (error) {
+					console.log(error);
 				}
-			]
+			});
 		},
 		methods: {
 			newComment: function () {

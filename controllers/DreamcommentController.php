@@ -39,7 +39,18 @@ class DreamcommentController extends \app\controllers\BaseController
 
 	public function actionIndex(string $dreamId)
 	{
-		return $this->asJson($this->getCommentsByDreamId($dreamId));
+		$dreamComments = $this->getCommentsByDreamId($dreamId);
+		$data = [];
+		foreach($dreamComments as $dreamComment)
+		{
+			$data[] = [
+				"id" => $dreamComment->getId(),
+				"date" => $dreamComment->getFormattedDate(),
+				"author" => $dreamComment->user->name,
+				"text" => $dreamComment->getDescription()
+			];
+		}
+		return $this->asJson($data);
 	}
 
 	/**

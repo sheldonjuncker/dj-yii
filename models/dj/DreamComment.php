@@ -13,7 +13,9 @@ use Yii;
  * @property int $user_id
  * @property string $created_at
  * @property string|null $description
+ *
  * @property Dream $dream
+ * @property User $user
  */
 class DreamComment extends \yii\db\ActiveRecord
 {
@@ -31,12 +33,12 @@ class DreamComment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'dream_id', 'user_id'], 'required'],
+            [['dream_id', 'user_id'], 'required'],
             [['user_id'], 'integer'],
             [['created_at'], 'safe'],
             [['description'], 'string'],
-            [['id', 'dream_id'], 'string', 'max' => 16],
-            [['id'], 'unique'],
+			[['id'], 'unique'],
+			[['id'], 'app\models\validators\UuidValidator', 'allowEmpty' => false, 'generateOnEmpty' => true],
             [['dream_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dream::class, 'targetAttribute' => ['dream_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -125,37 +127,23 @@ class DreamComment extends \yii\db\ActiveRecord
 	}
 
 	/**
-	 * Gets the UUID formatted as a string.
+	 * Gets the user ID.
 	 *
-	 * @return string
+	 * @return int
 	 */
-	public function getUserId(): ?string
+	public function getUserId(): ?int
 	{
-		if(!$this->user_id)
-		{
-			return NULL;
-		}
-		else
-		{
-			return Uuid::fromBytes($this->user_id)->toString();
-		}
+		return $this->user_id;
 	}
 
 	/**
-	 * Sets the formatted UUID.
+	 * Sets the user ID.
 	 *
 	 * @param null|string $id
 	 */
 	public function setUserId(?string $id)
 	{
-		if(!$id)
-		{
-			$this->user_id = $id;
-		}
-		else
-		{
-			$this->user_id = Uuid::fromString($id)->getBytes();
-		}
+		$this->user_id = $id;
 	}
 
 	/**
@@ -179,6 +167,16 @@ class DreamComment extends \yii\db\ActiveRecord
 	public function getDream(): DreamQuery
 	{
 		return $this->hasOne(Dream::class, ['id' => 'dream_id']);
+	}
+
+	/**
+	 * Dream user relationship.
+	 *
+	 * @return UserQuery
+	 */
+	public function getUser(): UserQuery
+	{
+		return $this->hasOne(User::class, ['id' => 'user_id']);
 	}
 
     /**

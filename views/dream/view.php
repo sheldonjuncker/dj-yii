@@ -6,6 +6,10 @@
 
 <div class="container">
     <br>
+	<!-- Used by JS to find the dream's id. -->
+	<?= \yii\helpers\Html::hiddenInput('_Dream[id]', $dream->getId(), [
+		'id' => 'Dream_id'
+	]) ?>
     <div class="row col-lg-12">
         <div class="col-lg-9">
             <h4><?=$dream->getTitle()?></h4>
