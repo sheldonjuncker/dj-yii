@@ -2,6 +2,7 @@
 
 namespace app\models\dj;
 
+use Rhumsaa\Uuid\Uuid;
 use Yii;
 
 /**
@@ -12,6 +13,7 @@ use Yii;
  * @property int $user_id
  * @property string $created_at
  * @property string|null $description
+ * @property Dream $dream
  */
 class DreamComment extends \yii\db\ActiveRecord
 {
@@ -35,8 +37,8 @@ class DreamComment extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['id', 'dream_id'], 'string', 'max' => 16],
             [['id'], 'unique'],
-            [['dream_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dream::className(), 'targetAttribute' => ['dream_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['dream_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dream::class, 'targetAttribute' => ['dream_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -47,12 +49,137 @@ class DreamComment extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dream_id' => 'Dream ID',
-            'user_id' => 'User ID',
+            'dream_id' => 'Dream',
+            'user_id' => 'User',
             'created_at' => 'Created At',
             'description' => 'Description',
         ];
     }
+
+	/**
+	 * Gets the UUID formatted as a string.
+	 *
+	 * @return string
+	 */
+	public function getId(): ?string
+	{
+		if(!$this->id)
+		{
+			return NULL;
+		}
+		else
+		{
+			return Uuid::fromBytes($this->id)->toString();
+		}
+	}
+
+	/**
+	 * Sets the formatted UUID.
+	 *
+	 * @param null|string $id
+	 */
+	public function setId(?string $id)
+	{
+		if(!$id)
+		{
+			$this->id = $id;
+		}
+		else
+		{
+			$this->id = Uuid::fromString($id)->getBytes();
+		}
+	}
+
+	/**
+	 * Gets the UUID formatted as a string.
+	 *
+	 * @return string
+	 */
+	public function getDreamId(): ?string
+	{
+		if(!$this->dream_id)
+		{
+			return NULL;
+		}
+		else
+		{
+			return Uuid::fromBytes($this->dream_id)->toString();
+		}
+	}
+
+	/**
+	 * Sets the formatted UUID.
+	 *
+	 * @param null|string $id
+	 */
+	public function setDreamId(?string $id)
+	{
+		if(!$id)
+		{
+			$this->dream_id = $id;
+		}
+		else
+		{
+			$this->dream_id = Uuid::fromString($id)->getBytes();
+		}
+	}
+
+	/**
+	 * Gets the UUID formatted as a string.
+	 *
+	 * @return string
+	 */
+	public function getUserId(): ?string
+	{
+		if(!$this->user_id)
+		{
+			return NULL;
+		}
+		else
+		{
+			return Uuid::fromBytes($this->user_id)->toString();
+		}
+	}
+
+	/**
+	 * Sets the formatted UUID.
+	 *
+	 * @param null|string $id
+	 */
+	public function setUserId(?string $id)
+	{
+		if(!$id)
+		{
+			$this->user_id = $id;
+		}
+		else
+		{
+			$this->user_id = Uuid::fromString($id)->getBytes();
+		}
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	public function getFormattedDate(): string
+	{
+		return Yii::$app->getFormatter()->asDate($this->created_at);
+	}
+
+	/**
+	 * Dream comment relationship.
+	 *
+	 * @return DreamQuery
+	 */
+	public function getDream(): DreamQuery
+	{
+		return $this->hasOne(Dream::class, ['id' => 'dream_id']);
+	}
 
     /**
      * {@inheritdoc}

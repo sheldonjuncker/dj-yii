@@ -13,7 +13,6 @@ use Yii;
 use app\models\dj\Dream;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * DreamController implements the CRUD actions for Dream model.
