@@ -246,6 +246,7 @@ class DreamController extends BaseController
 		if($request->getIsPost())
 		{
 			$postData = $request->post($dream->formName(), []);
+
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
 			$types = $postData['types'] ?? [];
@@ -278,19 +279,34 @@ class DreamController extends BaseController
 						$dream->link('types', $dreamType);
 					}
 				}
-
-				//Remove all previous comments
-				$dream->unlinkAll('comments', true);
-
+				
 				//Add new comments
 				$dreamComments = $postData['comment'] ?? [];
+				$deletedComments = $dreamComments['deleted'] ?? [];
+				unset($dreamComments['deleted']);
+
+				//Delete comments
+				foreach($deletedComments as $commentId => $value)
+				{
+					$dreamComment = DreamComment::find()->id($commentId)->one();
+					if($dreamComment)
+					{
+						$dreamComment->delete();
+					}
+				}
+
+				//Create or edit
 				foreach($dreamComments as $commentId => $commentText)
 				{
-					$dreamComment = new DreamComment();
-					$dreamComment->setId(Uuid::uuid1()->toString());
-					$dreamComment->description = $commentText;
-					$dreamComment->setUserId($this->getUser()->getId());
-					$dreamComment->setDreamId($dream->getId());
+					$dreamComment = DreamComment::find()->id($commentId)->one();
+					if(!$dreamComment)
+					{
+						$dreamComment = new DreamComment();
+						$dreamComment->setId(Uuid::uuid1()->toString());
+						$dreamComment->setUserId($this->getUser()->getId());
+						$dreamComment->setDreamId($dream->getId());
+					}
+					$dreamComment->setDescription($commentText);
 					$dream->link('comments', $dreamComment);
 				}
 

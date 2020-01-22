@@ -34,6 +34,10 @@
 ?>
 
 	<div class="dream comments-container">
+		<div class="deleted">
+			<input v-for="deleted in deletedComments" type="hidden" :name="'Dream[comment][deleted][' + deleted.id + ']'" value="1" />
+		</div>
+
 		<div v-for="comment in comments" class="dream comment row">
 			<div class="col-lg-8">
 				<b>{{ comment.author }}</b>

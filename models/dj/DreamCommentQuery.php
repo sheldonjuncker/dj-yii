@@ -2,6 +2,8 @@
 
 namespace app\models\dj;
 
+use Rhumsaa\Uuid\Uuid;
+
 /**
  * This is the ActiveQuery class for [[DreamComment]].
  *
@@ -9,10 +11,19 @@ namespace app\models\dj;
  */
 class DreamCommentQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
+	/**
+	 * Filters by ID.
+	 *
+	 * @param string $id The UUID in string or binary form.
+	 */
+	public function id(string $id)
+	{
+		if(Uuid::isValid($id))
+		{
+			$id = Uuid::fromString($id)->getBytes();
+		}
+		return $this->andWhere(['id' => $id]);
+	}
 
     /**
      * {@inheritdoc}

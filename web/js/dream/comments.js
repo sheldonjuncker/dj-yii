@@ -8,7 +8,8 @@ $(document).ready(function(){
 			buttonTitle: '',
 			commentId: '',
 			mode: '', // new|edit
-			comments: []
+			comments: [],
+			deletedComments: []
 		},
 		mounted: function () {
 			let self = this;
@@ -81,6 +82,9 @@ $(document).ready(function(){
 			},
 
 			deleteComment: function(commentId) {
+				this.deletedComments.push({
+					id: commentId
+				});
 				$('#DreamComment_' + commentId).parent().parent().remove();
 			}
 		}

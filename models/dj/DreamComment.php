@@ -147,6 +147,14 @@ class DreamComment extends \yii\db\ActiveRecord
 	}
 
 	/**
+	 * @param string $description
+	 */
+	public function setDescription(string $description)
+	{
+		$this->description = $description;
+	}
+
+	/**
 	 * @return null|string
 	 */
 	public function getDescription()
