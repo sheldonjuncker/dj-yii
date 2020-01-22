@@ -146,6 +146,7 @@ class DreamController extends BaseController
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
 			$types = $postData['types'] ?? [];
+			$dreamComments = $postData['comment'] ?? [];
 
 			if($postData)
 			{
@@ -179,6 +180,23 @@ class DreamController extends BaseController
 						}
 						$dream->save();
 					}
+
+					if($dreamComments)
+					{
+						//Add new comments
+						$dreamComments = $postData['comment'] ?? [];
+						foreach($dreamComments as $commentId => $commentText)
+						{
+							$dreamComment = new DreamComment();
+							$dreamComment->setId(Uuid::uuid1()->toString());
+							$dreamComment->description = $commentText;
+							$dreamComment->setUserId($this->getUser()->getId());
+							$dreamComment->setDreamId($dream->getId());
+							$dream->link('comments', $dreamComment);
+						}
+						$dream->save();
+					}
+
 
 					$this->addFlash(new Flash('Dream saved.', Flash::SUCCESS));
 					return $this->redirect(['view', 'id' => $dream->getId()]);
