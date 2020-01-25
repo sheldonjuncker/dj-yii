@@ -36,7 +36,7 @@ async def handle_request(reader, writer):
                 response = {
                     'code': 200,
                     'error': None,
-                    'data': token
+                    'data': token[0]
                 }
             else:
                 response = {
