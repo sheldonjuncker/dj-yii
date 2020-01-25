@@ -65,4 +65,14 @@ class AnalysisController extends BaseController
 			'dreamCountData' => $dreamGraphData->getDreamCountByCategory()
 		]);
 	}
+
+	public function actionConcept()
+	{
+		$this->addBreadcrumb(new Breadcrumb('Dreams by Concept', '', true));
+
+		$dreamGraphData = new DreamGraphData($this->getUser());
+		return $this->render('concept', [
+			'dreamCountData' => $dreamGraphData->getDreamCountByConcept()
+		]);
+	}
 }
