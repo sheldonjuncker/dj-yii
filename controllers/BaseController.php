@@ -128,4 +128,12 @@ class BaseController extends Controller
 
 		return parent::render($view, $params);
 	}
+
+	public function pre($data, bool $die = false)
+	{
+		print "<pre>";
+		print_r($data);
+		print "</pre>";
+		if($die) die();
+	}
 }

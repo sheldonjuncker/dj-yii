@@ -9,10 +9,17 @@ namespace app\models\freud;
  */
 class WordQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
+	public function wordLike(string $search): self
+	{
+		return $this->andWhere("word LIKE :search", [
+			':search' => '%' . $search . '%'
+		]);
+	}
+
+	public function word(string $word): self
+	{
+		return $this->andWhere(['word' => $word]);
+	}
 
     /**
      * {@inheritdoc}

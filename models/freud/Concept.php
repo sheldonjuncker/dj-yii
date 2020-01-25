@@ -103,4 +103,19 @@ class Concept extends \yii\db\ActiveRecord
 
 		return Dream::findBySql($sql, [':concept_id' => $this->id])->all();
 	}
+
+	/**
+	 * Gets word ids mapped to words for form usage.
+	 *
+	 * @return array
+	 */
+	public function getFormData(): array
+	{
+		$wordData = [];
+		foreach($this->words as $word)
+		{
+			$wordData[$word->word] = $word->word;
+		}
+		return $wordData;
+	}
 }

@@ -9,13 +9,16 @@ use yii\web\NotFoundHttpException;
 
 class DreamAnalysisApi
 {
+	const ADDRESS = '127.0.0.1';
+	const PORT = 1995;
+
 	/** @var  string $address API server address */
 	protected $address;
 
 	/** @var  int $port API port */
 	protected $port;
 
-	public function __construct(string $address, int $port)
+	public function __construct(string $address = self::ADDRESS, int $port = self::PORT)
 	{
 		$this->address = $address;
 		$this->port = $port;
