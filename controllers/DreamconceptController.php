@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\api\DreamAnalysis\AddWordRequest;
+use app\api\DreamAnalysis\DreamAnalysisApi;
+use app\components\gui\flash\Flash;
 use app\models\freud\Word;
 use Yii;
 use app\models\freud\Concept;
@@ -143,13 +146,33 @@ class DreamconceptController extends BaseController
         	$post = Yii::$app->request->post();
 			$model->load($post);
 
-			$wordIds = $post['Concept']['words'] ?? '';
-			if($wordIds)
+			//$this->pre($post, true);
+
+			$conceptWords = $post['Concept']['words'] ?? '';
+			if($conceptWords)
 			{
 				$model->unlinkAll('words', true);
-				foreach($wordIds as $wordId)
+				foreach($conceptWords as $conceptWord)
 				{
-					$word = Word::find()->andWhere(['id' => $wordId])->one();
+					$word = Word::find()->word($conceptWord)->one();
+					if(!$word)
+					{
+						//Create the word!
+						$conceptWord = str_replace(' (new)', '', $conceptWord);
+						$dreamAnalysis = new DreamAnalysisApi();
+						$wordRequest = new AddWordRequest();
+						$wordRequest->word = $conceptWord;
+						$wordResponse = $dreamAnalysis->addWord($wordRequest);
+						if($wordResponse->isSuccess())
+						{
+							$word = Word::find()->word($wordResponse->word)->one();
+						}
+						else
+						{
+							$this->addFlash(new Flash('Failed to add word ' . $conceptWord . ': ' . $wordResponse->error .  '.', Flash::WARNING));
+						}
+					}
+
 					if($word)
 					{
 						$model->link('words', $word);
@@ -159,13 +182,12 @@ class DreamconceptController extends BaseController
 
 			if($model->save())
 			{
+				$this->addFlash(new Flash('Successfully updated the concept.', Flash::SUCCESS));
 				return $this->redirect(['view', 'id' => $model->getId()]);
 			}
 			else
 			{
-				print "<pre>";
-				print_r($model->getErrors());
-				die();
+				$this->addFlash(new Flash('Failed to update concept.', Flash::FAILURE));
 			}
         }
 
@@ -187,6 +209,36 @@ class DreamconceptController extends BaseController
 
         return $this->redirect(['index']);
     }
+
+	/**
+	 * Gets all of the words as AJAX based on the search string.
+	 *
+	 * @param string $search
+	 */
+    public function actionWords(string $search)
+	{
+		//Search for matches
+		$words = Word::find()->wordLike($search)->all();
+
+		//Add unknown word to results so that it can be selected and created
+		if(!Word::find()->word($search)->exists())
+		{
+			$word = new Word();
+			$word->word = $search . ' (new)';
+			$word->id = $word->word;
+			array_unshift($words, $word);
+		}
+
+		$wordData = [];
+		foreach($words as $word)
+		{
+			$wordData[] = [
+				'id' => $word->word,
+				'text' => $word->word
+			];
+		}
+		return $this->asJson(['results' => $wordData]);
+	}
 
     /**
      * Finds the Concept model based on its primary key value.

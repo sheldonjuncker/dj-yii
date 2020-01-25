@@ -19,17 +19,11 @@ use kartik\select2\Select2;
     ]) ?>
 
 	<?php
-	$words = \app\models\freud\Word::find()->orderBy('word DESC')->all();
-	$wordData = [];
-	foreach($words as $word)
-	{
-		$wordData[$word->id] = $word->word;
-	}
 	echo '<label class="control-label">Words</label>';
 	echo Select2::widget([
 		'name' => 'Concept[words]',
-		'data' => $wordData,
-		'value' => array_column($model->words, 'id'),
+		'data' => $model->getFormData(),
+		'value' => array_column($model->words, 'word'),
 		'options' => [
 			'placeholder' => 'Select words...',
 			'multiple' => true,
