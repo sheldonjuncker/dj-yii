@@ -11,7 +11,7 @@
 			data: {
 				labels: <?=json_encode(array_keys($dreamCountData))?>,
 				datasets: [{
-					label: 'Dream Count by Category',
+					label: 'Dream Count by Concept',
 					data: <?=json_encode(array_values($dreamCountData))?>,
 					backgroundColor: 'rgba(255, 99, 132, 0.2)',
 					borderColor: 'rgba(255, 99, 132, 1)',
@@ -20,7 +20,7 @@
 			},
 			options: {
 				responsive: false,
-					scales: {
+				scales: {
 					yAxes: [{
 						ticks: {
 							beginAtZero: true

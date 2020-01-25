@@ -55,6 +55,10 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/analysis/category">Dreams by Category</a>
 						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" href="/analysis/concept">Dreams by Concept</a>
+						</li>
 					</ul>
 				</div>
 			</li>

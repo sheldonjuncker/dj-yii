@@ -10,24 +10,24 @@
 			type: 'bar',
 			data: {
 				labels: <?=json_encode(array_keys($dreamCountData))?>,
-		datasets: [{
-			label: 'Dream Count by Month',
-			data: <?=json_encode(array_values($dreamCountData))?>,
-		backgroundColor: 'rgba(255, 99, 132, 0.2)',
-			borderColor: 'rgba(255, 99, 132, 1)',
-			borderWidth: 1
-	}]
-	},
-		options: {
-			responsive: false,
-				scales: {
-				yAxes: [{
-					ticks: {
-						beginAtZero: true
-					}
+				datasets: [{
+					label: 'Dream Count by Month',
+					data: <?=json_encode(array_values($dreamCountData))?>,
+					backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					borderColor: 'rgba(255, 99, 132, 1)',
+					borderWidth: 1
 				}]
+			},
+			options: {
+				responsive: false,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
 			}
-		}
-	});
+		});
 	});
 </script>

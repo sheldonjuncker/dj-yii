@@ -25,7 +25,7 @@ class DreamGraphData
 	 *
 	 * @return array
 	 */
-	public function getDreamCountByDayOfWeek(int $userId = NULL): array
+	public function getDreamCountByDayOfWeek(): array
 	{
 		$sql = "
 			SELECT
@@ -55,7 +55,7 @@ class DreamGraphData
 	 *
 	 * @return array
 	 */
-	public function getDreamCountByMonth(int $userId = NULL): array
+	public function getDreamCountByMonth(): array
 	{
 		$sql = "
 			SELECT
@@ -80,7 +80,7 @@ class DreamGraphData
 		return $dreamCountDataByDay;
 	}
 
-	public function getDreamCountByCategory(int $userId = null): array
+	public function getDreamCountByCategory(): array
 	{
 		$sql = "
 			SELECT
@@ -98,6 +98,37 @@ class DreamGraphData
 				cat.id
 			ORDER BY
 				cat.name ASC
+			;
+		";
+		$dreamCountData = \Yii::$app->getDb()->createCommand($sql)->queryAll();
+		$dreamCountDataByDay = [];
+		foreach($dreamCountData as $row)
+		{
+			$dreamCountDataByDay[$row['name']] = $row['count'];
+		}
+		return $dreamCountDataByDay;
+	}
+
+	public function getDreamCountByConcept(): array
+	{
+		$sql = "
+			SELECT
+				concept.name AS 'name',
+				COUNT(dream.id) AS 'count'
+			FROM
+				dj.dream dream
+			INNER JOIN
+				freud.dream_word_freq dwf ON dwf.dream_id = dream.id
+			INNER JOIN
+				freud.word_to_concept w2c ON w2c.word_id = dwf.word_id
+			INNER JOIN
+				freud.concept concept ON concept.id = w2c.concept_id
+			WHERE
+		  		{$this->getUserCondition()}
+			GROUP BY
+				concept.id
+			ORDER BY
+				concept.name ASC
 			;
 		";
 		$dreamCountData = \Yii::$app->getDb()->createCommand($sql)->queryAll();
