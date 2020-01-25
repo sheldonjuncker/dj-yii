@@ -58,8 +58,11 @@ class DreamForm extends \yii\base\Model
 
 			$data = [
 				'search_text' => $this->search,
-				'user_id' => $this->user_id
+				'user_id' => $this->user_id,
+				'api' => 'search'
 			];
+			$data['api'] = 'add_word';
+			$data['word'] = 'Evangelion';
 			$jsonData = json_encode($data, JSON_PRETTY_PRINT);
 			if(!$student->write($jsonData))
 			{

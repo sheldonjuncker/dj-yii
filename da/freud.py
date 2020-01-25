@@ -6,8 +6,6 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import wordnet
-import mysql.connector
-from words import Words
 
 
 # Freud takes the dreams and analyzes them
@@ -19,44 +17,10 @@ class Freud:
     stem = None
 
     def __init__(self):
-        self.words = Words()
         self.lem = WordNetLemmatizer()
         self.stem = PorterStemmer()
         self.stop_words = stopwords.words("english")
         self.stop_words.extend([",", ".", "!", "?", ";", ":", "n't", "’", "'", "\"", "”", "“"])
-
-    def process(self):
-        self.cnx = mysql.connector.connect(user='root', password='password', database='freud')
-        # Get and process dreams
-        cursor = self.cnx.cursor(buffered=True)
-        dream_query = ("""
-            select 
-                bin_to_uuid(id) as 'id',
-                concat(title, '. ', description) as 'text'
-            from
-                dj.dream
-            where
-                not exists(
-                    select
-                        1
-                    from
-                        freud.dream_word_freq dwf
-                    where
-                        dwf.dream_id = dream.id
-                    limit
-                        1
-                )
-            ;
-        """)
-
-        cursor.execute(dream_query)
-        for (id, text) in cursor:
-            text = self.__preprocess_dream_text(text)
-            self.__process_dream(id, text)
-
-        cursor.close()
-        self.cnx.commit()
-        self.cnx.close()
 
     # Converts treebank to wordnet format for parts of speech
     def __get_wordnet_pos(self, treebank_tag):
@@ -108,20 +72,20 @@ class Freud:
 
         return tokens
 
-    def __preprocess_dream_text(self, text):
+    def preprocess_dream_text(self, text):
         # Convert weird unicode things to spaces
         text = text.replace('—', ' ')
         return text
 
-    def __process_dream(self, dream_id, text):
-        print("Processing dream " + dream_id)
+    def process_dream(self, dream_id, text):
         dream_tokens = []
         # Split into sentences
         sentences = sent_tokenize(text)
         for s in sentences:
             dream_tokens.extend(self.process_sentence(s))
 
+        dream_word_freq = []
         # Get sorted frequency of words
         for item in FreqDist(dream_tokens).items():
-            self.words.add_dream_frequency(dream_id, item[0][0], item[0][1], item[1] / len(dream_tokens))
-        print("Finished.\n")
+            dream_word_freq.append((dream_id, item[0][0], item[0][1], item[1] / len(dream_tokens)))
+        return dream_word_freq
