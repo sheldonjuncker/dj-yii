@@ -107,6 +107,9 @@ getPaths = () => {
 	  }	,
 	  tagsinput: {
       	all: "js/tagsinput/*.js"
+	  },
+	  dream: {
+      	all: "js/dream/*.js"
 	  }
     },
     scss: {
@@ -146,6 +149,7 @@ getPaths = () => {
       scssSources: 'dist/scss',
       js: 'dist/assets/js',
 	  tagsinput: 'dist/assets/js/tagsinput',
+	  dream: 'dist/assets/js/dream',
       vue: 'dist/assets/js/vue',
       jsSources: 'dist/js',
       fonts: 'dist/assets/fonts',
@@ -354,6 +358,13 @@ gulp.task('tagsinputjs', async (done) => {
 	done();
 });
 
+gulp.task('dreamjs', async (done) => {
+	gulp.src(paths.js.dream.all)
+		.pipe(gulp.dest(paths.dist.dream));
+	reload();
+	done();
+});
+
 gulp.task('vuejs', async (done) => {
 	gulp.src(require.resolve('vue/dist/vue.js'))
 		.pipe(rename('vue.js'))
@@ -514,6 +525,6 @@ gulp.task('watch', function (done) {
 
 //Not building HTML by default as we're using our own templating.
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs', 'chartjs') /*, gulp.series('serve', 'watch')*/));
+gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs', 'chartjs', 'dreamjs') /*, gulp.series('serve', 'watch')*/));
 
-gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs', 'chartjs')));
+gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs', 'chartjs', 'dreamjs')));

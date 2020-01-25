@@ -1,4 +1,5 @@
 <?php
+/** @var \yii\web\View $this */
 /** @var \app\models\dj\Dream $dream */
 /** @var \app\models\dj\DreamType[] $dreamTypes */
 /** @var bool $dreamTypesDisabled */
@@ -6,6 +7,10 @@
 
 <div class="container">
     <br>
+	<!-- Used by JS to find the dream's id. -->
+	<?= \yii\helpers\Html::hiddenInput('_Dream[id]', $dream->getId(), [
+		'id' => 'Dream_id'
+	]) ?>
     <div class="row col-lg-12">
         <div class="col-lg-9">
             <h4><?=$dream->getTitle()?></h4>
@@ -44,6 +49,7 @@
 			</div>
 		</div>
 	</div>
+	<hr>
     <div class="row col-lg-12">
         <div class="form-group">
             <label>Dream Categories</label>
@@ -66,6 +72,7 @@
             </div>
         </div>
     </div>
+	<hr>
 	<div class="row col-lg-12">
 		<div class="form-group">
 			<label>Concepts</label>
@@ -81,7 +88,7 @@
 			</div>
 		</div>
 	</div>
-
+	<hr>
 	<div class="row col-lg-12">
 		<div class="form-group">
 			<label>Similar Dreams</label>
@@ -99,5 +106,10 @@
 				?>
 			</div>
 		</div>
+	</div>
+	<hr>
+	<div class="row col-lg-12">
+		<label>Comments</label>
+		<?=$this->render('comment', ['editable' => false])?>
 	</div>
 </div>

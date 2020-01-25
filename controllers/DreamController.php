@@ -7,13 +7,13 @@ use app\components\gui\Breadcrumb;
 use app\components\gui\flash\Flash;
 use app\components\gui\js\Script;
 use app\models\dj\DreamCategory;
+use app\models\dj\DreamComment;
 use app\models\dj\DreamType;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * DreamController implements the CRUD actions for Dream model.
@@ -53,6 +53,16 @@ class DreamController extends BaseController
 		//Register scripts needed for dreams
 		$this->getScriptRegistrar()->registerScript(
 			new Script('tagsinput/tagsinput-typeahead.js')
+		);
+
+		//Register Vue for dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('vue/vue.js')
+		);
+
+		//Register dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('dream/comments.js')
 		);
 
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
@@ -136,6 +146,7 @@ class DreamController extends BaseController
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
 			$types = $postData['types'] ?? [];
+			$dreamComments = $postData['comment'] ?? [];
 
 			if($postData)
 			{
@@ -169,6 +180,23 @@ class DreamController extends BaseController
 						}
 						$dream->save();
 					}
+
+					if($dreamComments)
+					{
+						//Add new comments
+						$dreamComments = $postData['comment'] ?? [];
+						foreach($dreamComments as $commentId => $commentText)
+						{
+							$dreamComment = new DreamComment();
+							$dreamComment->setId(Uuid::uuid1()->toString());
+							$dreamComment->description = $commentText;
+							$dreamComment->setUserId($this->getUser()->getId());
+							$dreamComment->setDreamId($dream->getId());
+							$dream->link('comments', $dreamComment);
+						}
+						$dream->save();
+					}
+
 
 					$this->addFlash(new Flash('Dream saved.', Flash::SUCCESS));
 					return $this->redirect(['view', 'id' => $dream->getId()]);
@@ -218,6 +246,7 @@ class DreamController extends BaseController
 		if($request->getIsPost())
 		{
 			$postData = $request->post($dream->formName(), []);
+
 			$categoryIdString = $postData['categories'] ?? "";
 			$categories = explode(',', $categoryIdString);
 			$types = $postData['types'] ?? [];
@@ -249,6 +278,36 @@ class DreamController extends BaseController
 					{
 						$dream->link('types', $dreamType);
 					}
+				}
+
+				//Add new comments
+				$dreamComments = $postData['comment'] ?? [];
+				$deletedComments = $dreamComments['deleted'] ?? [];
+				unset($dreamComments['deleted']);
+
+				//Delete comments
+				foreach($deletedComments as $commentId => $value)
+				{
+					$dreamComment = DreamComment::find()->id($commentId)->one();
+					if($dreamComment)
+					{
+						$dreamComment->delete();
+					}
+				}
+
+				//Create or edit
+				foreach($dreamComments as $commentId => $commentText)
+				{
+					$dreamComment = DreamComment::find()->id($commentId)->one();
+					if(!$dreamComment)
+					{
+						$dreamComment = new DreamComment();
+						$dreamComment->setId(Uuid::uuid1()->toString());
+						$dreamComment->setUserId($this->getUser()->getId());
+						$dreamComment->setDreamId($dream->getId());
+					}
+					$dreamComment->setDescription($commentText);
+					$dream->link('comments', $dreamComment);
 				}
 
 				if($dream->save())

@@ -16,6 +16,11 @@ use yii\widgets\ActiveForm;
 	<div class="dream-form">
 		<?php $form = ActiveForm::begin(); ?>
 
+		<!-- Used by JS to find the dream's id. -->
+		<?= Html::hiddenInput('_Dream[id]', $dream->getId(), [
+			'id' => 'Dream_id'
+		]) ?>
+
 		<?= $form->field($dream, 'title')->textInput(['maxlength' => true]) ?>
 
 		<?= $form->field($dream, 'dreamt_at')->textInput([
@@ -52,6 +57,11 @@ use yii\widgets\ActiveForm;
 				'id' => 'Dream_categories',
 				'class' => 'form-control'
 			])?>
+		</div>
+
+		<div class="row col-lg-12">
+			<label>Comments</label>
+			<?=$this->render('comment', ['editable' => true])?>
 		</div>
 
 		<div class="form-group">

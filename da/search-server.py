@@ -1,4 +1,6 @@
 from jung import Jung
+from freud import Freud
+from words import Words
 import asyncio
 import json
 
@@ -13,22 +15,41 @@ async def handle_request(reader, writer):
             'data': None
         }
     else:
-        search = json.loads(data.decode())
-
-        print("searching for: " + data.decode())
-        j = Jung()
-        response = {
-            'code': 200,
-            'error': None,
-            'data': j.search(search['search_text'], search['user_id'])
-        }
+        request = json.loads(data.decode())
+        api = request['api']
+        if api == 'search':
+            j = Jung()
+            response = {
+                'code': 200,
+                'error': None,
+                'data': j.search(request['search_text'], request['user_id'])
+            }
+        elif api == 'add_word':
+            sentence = request['word']
+            f = Freud()
+            sentence = f.preprocess_dream_text(sentence)
+            tokens = f.process_sentence(sentence)
+            if len(tokens) > 0:
+                token = tokens[0]
+                words = Words()
+                words.add_lemmatized_word(token[0], token[1])
+                response = {
+                    'code': 200,
+                    'error': None,
+                    'data': token[0]
+                }
+            else:
+                response = {
+                    'code': 400,
+                    'error': 'failed to add word',
+                    'data': None
+                }
 
     json_response = json.dumps(response)
     print('sending: ' + json_response)
     writer.write(json_response.encode())
     await writer.drain()
     writer.close()
-
 
 async def main():
     server = await asyncio.start_server(

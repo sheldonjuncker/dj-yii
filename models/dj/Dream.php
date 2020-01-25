@@ -20,6 +20,7 @@ use yii\db\ActiveQuery;
  *
  * @property DreamCategory[] $categories
  * @property DreamType[] $types
+ * @property DreamComment[] $comments
  */
 class Dream extends \yii\db\ActiveRecord
 {
@@ -141,6 +142,16 @@ class Dream extends \yii\db\ActiveRecord
 	public function getTypes(): DreamTypeQuery
 	{
 		return $this->hasMany(DreamType::class, ['id' => 'type_id'])->viaTable('dream_to_dream_type', ['dream_id' => 'id']);
+	}
+
+	/**
+	 * Dream comment relationship.
+	 *
+	 * @return DreamCommentQuery
+	 */
+	public function getComments(): DreamCommentQuery
+	{
+		return $this->hasMany(DreamComment::class, ['dream_id' => 'id']);
 	}
 
     public function getFormattedDate(): string
