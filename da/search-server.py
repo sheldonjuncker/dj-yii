@@ -1,4 +1,5 @@
 from jung import Jung
+from words import Words
 import asyncio
 import json
 
@@ -13,15 +14,20 @@ async def handle_request(reader, writer):
             'data': None
         }
     else:
-        search = json.loads(data.decode())
+        request = json.loads(data.decode())
+        print('incoming request: ' + request)
 
-        print("searching for: " + data.decode())
-        j = Jung()
-        response = {
-            'code': 200,
-            'error': None,
-            'data': j.search(search['search_text'], search['user_id'])
-        }
+
+        api = request['api']
+        if api == 'search':
+            j = Jung()
+            response = {
+                'code': 200,
+                'error': None,
+                'data': j.search(request['search_text'], request['user_id'])
+            }
+        elif api == 'add_word':
+
 
     json_response = json.dumps(response)
     print('sending: ' + json_response)

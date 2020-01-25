@@ -279,7 +279,7 @@ class DreamController extends BaseController
 						$dream->link('types', $dreamType);
 					}
 				}
-				
+
 				//Add new comments
 				$dreamComments = $postData['comment'] ?? [];
 				$deletedComments = $dreamComments['deleted'] ?? [];
