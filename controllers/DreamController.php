@@ -77,10 +77,10 @@ class DreamController extends BaseController
      */
     public function actionIndex(string $period = '', string $search = '')
     {
-    	$allActive = $period == '' ? 'active' : '';
-    	$weekActive = $period == 'week' ? 'active' : '';
-    	$monthActive = $period == 'month' ? 'active' : '';
-    	$yearActive = $period == 'year' ? 'active' : '';
+		$allActive = '';
+		$weekActive = '';
+		$monthActive = '';
+		$yearActive = '';
 
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
@@ -99,6 +99,11 @@ class DreamController extends BaseController
 		}
 		else
 		{
+			$allActive = $period == '' ? 'active' : '';
+			$weekActive = $period == 'week' ? 'active' : '';
+			$monthActive = $period == 'month' ? 'active' : '';
+			$yearActive = $period == 'year' ? 'active' : '';
+
 			//Limit by period
 			$startDate = NULL;
 			if($weekActive)
