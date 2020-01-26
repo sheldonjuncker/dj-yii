@@ -74,12 +74,38 @@ class DreamController extends BaseController
      * Lists all Dream models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(string $period = '')
     {
+    	$allActive = $period == '' ? 'active' : '';
+    	$weekActive = $period == 'week' ? 'active' : '';
+    	$monthActive = $period == 'month' ? 'active' : '';
+    	$yearActive = $period == 'year' ? 'active' : '';
+
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
 
-    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->whereUserId(Yii::$app->getUser()->getId())->all();
+    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->whereUserId(Yii::$app->getUser()->getId());
+
+    	$startDate = NULL;
+    	if($weekActive)
+		{
+			$startDate = strtotime("-1 week");
+		}
+		else if($monthActive)
+		{
+			$startDate = strtotime("-1 month", time());
+		}
+		else if($yearActive)
+		{
+			$startDate = strtotime("-1 year", time());
+		}
+
+		if($startDate)
+		{
+			$dreams->dreamtBetween($startDate, time());
+		}
+
+		$dreams = $dreams->all();
 
 		$dreamsByDay = [];
 
@@ -99,7 +125,11 @@ class DreamController extends BaseController
 		}
 
         return $this->render('index', [
-            'dreams' => $dreamsByDay
+            'dreams' => $dreamsByDay,
+			'weekActive' => $weekActive,
+			'monthActive' => $monthActive,
+			'yearActive' => $yearActive,
+			'allActive' => $allActive
         ]);
     }
 

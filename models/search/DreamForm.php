@@ -42,7 +42,7 @@ class DreamForm extends \yii\base\Model
 	{
 		$result = NULL;
 
-		$dreamAnalysis = new DreamAnalysisApi('127.0.0.1', 1995);
+		$dreamAnalysis = new DreamAnalysisApi();
 		$dreamSearchRequest = new DreamSearchRequest();
 		$dreamSearchRequest->user_id = $this->user_id;
 		$dreamSearchRequest->search_text = $this->search;

@@ -1,3 +1,9 @@
+<?php
+/** @var string $weekActive */
+/** @var string $monthActive */
+/** @var string $yearActive */
+/** @var string $allActive */
+?>
 <div class="container">
 	<br>
 	<div class="row content-list-head">
@@ -7,13 +13,16 @@
 		<div class="col-md-auto">
 			<ul class="nav nav-pills nav-small">
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" role="tab" aria-controls="day" aria-selected="false">Day</a>
+					<a class="nav-link <?=$allActive?>" href="/dream">All</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active" data-toggle="tab" role="tab" aria-controls="week" aria-selected="true">Week</a>
+					<a class="nav-link <?=$weekActive?>" href="/dream?period=week">Week</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" role="tab" aria-controls="month" aria-selected="false">Month</a>
+					<a class="nav-link <?=$monthActive?>" href="/dream?period=month">Month</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link <?=$yearActive?>" href="/dream?period=year">Year</a>
 				</li>
 			</ul>
 		</div>
