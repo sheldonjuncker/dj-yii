@@ -100,9 +100,6 @@
 				</li>
 				<?php
 			}
-			?>
-
-			<?php
 		}
 		else
 		{
@@ -123,6 +120,14 @@
 
 			<li class="nav-item">
 				<a class="nav-link" href="#">Contact</a>
+			</li>
+			<li class="nav-item">
+				<div class="form">
+					<form action="" method="get">
+						<input type="text" class="form-control" name="search" placeholder="Search for dreams..."/>
+					</form>
+
+				</div>
 			</li>
 		</ul>
 		<hr>

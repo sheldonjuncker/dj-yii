@@ -9,6 +9,7 @@ use app\components\gui\js\Script;
 use app\models\dj\DreamCategory;
 use app\models\dj\DreamComment;
 use app\models\dj\DreamType;
+use app\models\search\DreamForm;
 use Rhumsaa\Uuid\Uuid;
 use Yii;
 use app\models\dj\Dream;
@@ -74,12 +75,57 @@ class DreamController extends BaseController
      * Lists all Dream models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(string $period = '', string $search = '')
     {
+		$allActive = '';
+		$weekActive = '';
+		$monthActive = '';
+		$yearActive = '';
+
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
 
-    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->whereUserId(Yii::$app->getUser()->getId())->all();
+    	$dreams = Dream::find()->orderBy('dreamt_at DESC')->whereUserId(Yii::$app->getUser()->getId());
+
+
+    	if($search)
+		{
+			//Limit to searched for dreams
+			$dreamSearchForm = new DreamForm();
+			$dreamSearchForm->user_id = $this->getUser()->getId();
+			$dreamSearchForm->search = $search;
+			$searchResults = $dreamSearchForm->getDreams();
+			$dreams->andWhere(['in' ,'id', array_column($searchResults, 'id')]);
+		}
+		else
+		{
+			$allActive = $period == '' ? 'active' : '';
+			$weekActive = $period == 'week' ? 'active' : '';
+			$monthActive = $period == 'month' ? 'active' : '';
+			$yearActive = $period == 'year' ? 'active' : '';
+
+			//Limit by period
+			$startDate = NULL;
+			if($weekActive)
+			{
+				$startDate = strtotime("-1 week");
+			}
+			else if($monthActive)
+			{
+				$startDate = strtotime("-1 month", time());
+			}
+			else if($yearActive)
+			{
+				$startDate = strtotime("-1 year", time());
+			}
+
+			if($startDate)
+			{
+				$dreams->dreamtBetween($startDate, time());
+			}
+		}
+
+		$dreams = $dreams->all();
 
 		$dreamsByDay = [];
 
@@ -99,7 +145,11 @@ class DreamController extends BaseController
 		}
 
         return $this->render('index', [
-            'dreams' => $dreamsByDay
+            'dreams' => $dreamsByDay,
+			'weekActive' => $weekActive,
+			'monthActive' => $monthActive,
+			'yearActive' => $yearActive,
+			'allActive' => $allActive
         ]);
     }
 
