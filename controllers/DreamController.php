@@ -61,11 +61,6 @@ class DreamController extends BaseController
 			new Script('vue/vue.js')
 		);
 
-		//Register dream comments
-		$this->getScriptRegistrar()->registerScript(
-			new Script('dream/comments.js')
-		);
-
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 
 		return parent::beforeAction($action);
@@ -153,6 +148,14 @@ class DreamController extends BaseController
         ]);
     }
 
+    public function actionList()
+	{
+		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
+		return $this->render('dream-list', [
+			'canFilter' => false
+		]);
+	}
+
     /**
      * Displays a single Dream model.
      * @param string $id
@@ -161,6 +164,11 @@ class DreamController extends BaseController
      */
     public function actionView($id)
     {
+		//Register dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('dream/comments.js')
+		);
+
 		$this->getView()->title = 'View Dream';
 
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
@@ -183,6 +191,11 @@ class DreamController extends BaseController
      */
     public function actionNew()
     {
+		//Register dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('dream/comments.js')
+		);
+
 		$this->getView()->title = 'New Dream';
 		$this->addBreadcrumb(new Breadcrumb('New', '', true));
 
@@ -275,6 +288,11 @@ class DreamController extends BaseController
      */
     public function actionEdit($id)
     {
+		//Register dream comments
+		$this->getScriptRegistrar()->registerScript(
+			new Script('dream/comments.js')
+		);
+
 		$this->getView()->title = 'Edit Dream';
 
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));

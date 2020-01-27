@@ -15,6 +15,7 @@ async def handle_request(reader, writer):
             'data': None
         }
     else:
+        print("request: " + data.decode())
         request = json.loads(data.decode())
         api = request['api']
         if api == 'search':
@@ -22,7 +23,7 @@ async def handle_request(reader, writer):
             response = {
                 'code': 200,
                 'error': None,
-                'data': j.search(request['search_text'], request['user_id'])
+                'data': j.search(request['search_text'], request['user_id'], request['limit'], request['page'])
             }
         elif api == 'add_word':
             sentence = request['word']

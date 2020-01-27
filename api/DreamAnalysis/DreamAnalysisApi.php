@@ -40,10 +40,13 @@ class DreamAnalysisApi
 			$response->code = intval($responseData->code ?? -1);
 			$response->error = $responseData->error ?? NULL;
 			$data = $responseData->data ?? [];
-			foreach($data as $datum)
+			$dreamResults = $data->results ?? [];
+			$response->total = $data->total ?? NULL;
+
+			foreach($dreamResults as $dreamResult)
 			{
-				$dreamId = $datum[0] ?? '';
-				$dreamFrequency = $datum[1] ?? '';
+				$dreamId = $dreamResult->id ?? '';
+				$dreamFrequency = $dreamResult->frequency ?? '';
 
 				if($dreamId && $dreamFrequency)
 				{
@@ -107,7 +110,13 @@ class DreamAnalysisApi
 				throw new BadRequestHttpException('Failed to send request to DreamAnalysis API.');
 			}
 
-			$responseData = $conn->read(8192);
+			$responseData = '';
+			//Read data in 8k chunks (why this number? who knows)
+			while($bytes = $conn->read(8192))
+			{
+				$responseData .= $bytes;
+			}
+
 			if(!$responseData)
 			{
 				throw new BadRequestHttpException('Failed to receive response from DreamAnalysis API.');

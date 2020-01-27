@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	let dreamListApp = new Vue({
-		el: '#dream-list',
+		el: '#dream-list-app',
 		data: {
 			dreams: [],
 			resultsPerPage: null,
@@ -15,7 +15,7 @@ $(document).ready(function(){
 		},
 		methods: {
 			loadResults: function(data) {
-				this.dreams = data.dreams;
+				this.dreams = data.results;
 				this.totalPages = data.total;
 			},
 
@@ -36,11 +36,12 @@ $(document).ready(function(){
 			search: function() {
 				let self = this;
 				$.ajax({
-					url: '/search',
+					url: '/search/list',
 					method: 'GET',
 					data: {
-						limit: this.resultsPerPage,
-						page: this.currentPage
+						'DreamForm[limit]': this.resultsPerPage,
+						'DreamForm[page]': this.currentPage,
+						'DreamForm[search]': 'airplane'
 					},
 					success: function (data) {
 						self.loadResults(data);
@@ -52,4 +53,6 @@ $(document).ready(function(){
 			}
 		}
 	});
+
+	dreamListApp.search();
 });

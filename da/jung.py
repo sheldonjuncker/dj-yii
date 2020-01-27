@@ -4,12 +4,22 @@ from freud import Freud
 
 # Jung searches for dreams and gives you answers
 class Jung:
-    def search(self, search_text, user_id=None):
-        f = Freud()
-        tokens = f.process_sentence(search_text)
+    def search(self, search_text, user_id=None, limit=None, page=None):
         search_terms = []
-        for token in tokens:
-            search_terms.append(token[1])
+
+        limit = int(limit or 0)
+        page = int(page or 0)
+
+        if search_text is not None:
+            f = Freud()
+            search_text = f.preprocess_dream_text(search_text)
+            tokens = f.process_sentence(search_text)
+            search_terms = []
+            for token in tokens:
+                search_terms.append(token[1])
+        else:
+            # No search terms, search everything
+            search_terms.append('')
 
         if user_id is not None:
             user_condition = "dream.user_id = " + user_id
@@ -55,10 +65,33 @@ ORDER BY
     total_frequency DESC
         """
 
+        limit_sql = sql
+        if limit > 0:
+            limit_sql = limit_sql + """
+LIMIT
+    """ + str(page * limit) + ", " + str(limit)
+
         cnx = mysql.connector.connect(user='root', password='password', database='freud')
+
+        # Get the paged dream results
+        cursor = cnx.cursor()
+        cursor.execute(limit_sql, params)
+        results = {
+            'results': [],
+            'total': 0
+        }
+        for result in cursor:
+            results['results'].append({
+                'id': result[0],
+                'frequency': result[1]
+            })
+        cursor.close()
+
+        # Get the total count of results (horribly inefficient, refactor to use counting)
         cursor = cnx.cursor()
         cursor.execute(sql, params)
-        results = []
-        for result in cursor:
-            results.append((result[0], result[1]))
+        cursor.fetchall()
+        results['total'] = cursor.rowcount;
+        cursor.close()
+
         return results
