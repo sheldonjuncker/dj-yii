@@ -10,15 +10,14 @@ class Jung:
         limit = int(limit or 0)
         page = int(page or 0)
 
-        if search_text is not None:
+        if search_text:
             f = Freud()
             search_text = f.preprocess_dream_text(search_text)
             tokens = f.process_sentence(search_text)
-            search_terms = []
             for token in tokens:
                 search_terms.append(token[1])
-        else:
-            # No search terms, search everything
+
+        if len(search_terms) == 0:
             search_terms.append('')
 
         if user_id is not None:

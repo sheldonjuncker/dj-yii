@@ -6,10 +6,17 @@
 	if($canFilter)
 	{
 		?>
-		<input type="text" name="filter" class="form-control" v-on:click="filter" />
+		<input v-model="filter" type="text" name="filter" placeholder="Search for dreams..." class="form-control" v-on:keyup.enter="search()" v-on:blur="search()" />
 		<?php
 	}
 	?>
+
+	<button v-on:click="prev()" type="button" class="btn btn-primary">Previous</button>
+	<span> page </span>
+	<button type="button" class="btn btn-primary btn-sm">{{ currentPage + 1 }}</button>
+	<span> of </span>
+	<button type="button" class="btn btn-primary btn-sm">{{ totalPages }}</button>
+	<button v-on:click="next()" type="button" class="btn btn-primary">Next</button>
 	<li v-for="dream in dreams" class="list-group-item">
 		<div class="media align-items-center">
 			<ul class="avatars">

@@ -152,7 +152,7 @@ class DreamController extends BaseController
 	{
 		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
 		return $this->render('dream-list', [
-			'canFilter' => false
+			'canFilter' => true
 		]);
 	}
 
