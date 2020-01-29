@@ -61,6 +61,34 @@ class SearchController extends BaseController
 		return $this->asJson($data);
 	}
 
+	public function actionRelated(string $id)
+	{
+		$dreamForm = new DreamForm();
+		$dreamForm->user_id = $this->getUser()->getId();
+		$dreamForm->load(\Yii::$app->request->get());
+		$dreamSearchResponse = $dreamForm->performSearch();
+		$data = [
+			'total' => 0,
+			'results' => []
+		];
+		if($dreamSearchResponse->isSuccess())
+		{
+			$dreamData = [];
+			foreach($dreamSearchResponse->getDreams() as $dream)
+			{
+				$dreamData[] = [
+					'id' => $dream->getId(),
+					'title' => $dream->getTitle(),
+					'date' => $dream->getFormattedDate()
+				];
+			}
+			$data['total'] = $dreamSearchResponse->total;
+			$data['results'] = $dreamData;
+		}
+
+		return $this->asJson($data);
+	}
+
 	public function actionSearch()
 	{
 		$dreamForm = new DreamForm();

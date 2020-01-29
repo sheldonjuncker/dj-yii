@@ -2,6 +2,7 @@ $(document).ready(function(){
 	let dreamListApp = new Vue({
 		el: '#dream-list-app',
 		data: {
+			action: '',
 			dreams: [],
 
 			resultsPerPage: 10,
@@ -15,6 +16,12 @@ $(document).ready(function(){
 			lastFilter: null
 		},
 		mounted: function () {
+			//Load settings from HTML (populated by PHP)
+			let $vueData = $('#dream-list-app > .vue-data').first();
+
+			//Get the form action
+			this.action = $vueData.data('action');
+
 			if(this.searchOnLoad) {
 				this.search();
 			}
@@ -70,7 +77,7 @@ $(document).ready(function(){
 
 				let self = this;
 				$.ajax({
-					url: '/search/list',
+					url: this.action,
 					method: 'GET',
 					data: {
 						'DreamForm[limit]': this.resultsPerPage,

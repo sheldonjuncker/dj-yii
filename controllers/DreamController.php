@@ -148,11 +148,32 @@ class DreamController extends BaseController
         ]);
     }
 
+	/**
+	 * Renders a simple dream list which can filter.
+	 *
+	 * @return string
+	 */
     public function actionList()
 	{
 		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
 		return $this->render('dream-list', [
-			'canFilter' => true
+			'canFilter' => true,
+			'formAction' => '/search/list'
+		]);
+	}
+
+	/**
+	 * Renders the related dreams.
+	 *
+	 * @param string $id
+	 * @return string
+	 */
+	public function actionRelated(string $id)
+	{
+		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
+		return $this->render('related', [
+			'canFilter' => true,
+			'formAction' => '/search/related/' . $id
 		]);
 	}
 
