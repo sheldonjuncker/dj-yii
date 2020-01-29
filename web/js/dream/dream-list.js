@@ -25,8 +25,15 @@ $(document).ready(function(){
 				this.totalPages = Number.parseInt(Math.ceil(data.total / this.resultsPerPage));
 			},
 
+			first: function() {
+				if(this.currentPage > 0) {
+					this.currentPage = 0;
+					this.search();
+				}
+			},
+
 			prev: function() {
-				if(this.currentPage >  0) {
+				if(this.currentPage > 0) {
 					this.lastPage = this.currentPage;
 					this.currentPage--;
 					this.search();
@@ -37,6 +44,13 @@ $(document).ready(function(){
 				if(this.currentPage + 1 < this.totalPages) {
 					this.lastPage = this.currentPage;
 					this.currentPage++;
+					this.search();
+				}
+			},
+
+			last: function() {
+				if(this.currentPage < this.totalPages - 1) {
+					this.currentPage = this.totalPages - 1;
 					this.search();
 				}
 			},

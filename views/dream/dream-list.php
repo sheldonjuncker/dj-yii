@@ -1,7 +1,7 @@
 <?php
 /** @var bool $canFilter */
 ?>
-<div id="dream-list-app" class="col-lg-12">
+<div id="dream-list-app" class="col-lg-12" v-cloak>
 	<?php
 	if($canFilter)
 	{
@@ -12,9 +12,11 @@
 	?>
 
 	<div v-show="dreams.length > 0">
+		<button v-on:click="first()" type="button" class="btn btn-primary badge">&lt;&lt;</button>
 		<button v-on:click="prev()" type="button" class="btn btn-primary badge">&lt;</button>
 		<span  class="badge badge-primary">{{ currentPage + 1 + ' / ' + totalPages }}</span>
 		<button v-on:click="next()" type="button" class="btn btn-primary badge">&gt;</button>
+		<button v-on:click="last()" type="button" class="btn btn-primary badge">&gt;&gt;</button>
 	</div>
 	<div id="dream-list">
 		<div id="dream-loading">
@@ -39,8 +41,10 @@
 		</li>
 	</div>
 	<div v-show="dreams.length > 0">
+		<button v-on:click="first()" type="button" class="btn btn-primary badge">&lt;&lt;</button>
 		<button v-on:click="prev()" type="button" class="btn btn-primary badge">&lt;</button>
 		<span  class="badge badge-primary">{{ currentPage + 1 + ' / ' + totalPages }}</span>
 		<button v-on:click="next()" type="button" class="btn btn-primary badge">&gt;</button>
+		<button v-on:click="last()" type="button" class="btn btn-primary badge">&gt;&gt;</button>
 	</div>
 </div>

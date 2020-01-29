@@ -61,7 +61,7 @@ WHERE
 GROUP BY
     dream_id
 ORDER BY
-    total_frequency DESC
+    total_frequency DESC, dream_id DESC
         """
 
         limit_sql = sql
