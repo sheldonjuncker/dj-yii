@@ -4,6 +4,7 @@ $(document).ready(function(){
 		data: {
 			action: '',
 			dreams: [],
+			loadingMessage: 'No dreams found.',
 
 			resultsPerPage: 10,
 			currentPage: 0,
@@ -15,21 +16,16 @@ $(document).ready(function(){
 			filter: '',
 			lastFilter: null
 		},
-		mounted: function () {
-			//Load settings from HTML (populated by PHP)
-			let $vueData = $('#dream-list-app > .vue-data').first();
-
-			//Get the form action
-			this.action = $vueData.data('action');
-
-			if(this.searchOnLoad) {
-				this.search();
-			}
-		},
 		methods: {
 			loadResults: function(data) {
 				this.dreams = data.results;
 				this.totalPages = Number.parseInt(Math.ceil(data.total / this.resultsPerPage));
+
+				if(this.dreams.length > 0) {
+					this.loadingMessage = '';
+				} else {
+					this.loadingMessage = 'No dreams found.';
+				}
 			},
 
 			first: function() {
@@ -93,6 +89,18 @@ $(document).ready(function(){
 					}
 				});
 			}
-		}
+		},
+		mounted () {
+			//Load settings from HTML (populated by PHP)
+			let $vueData = $('#dream-list-app > .vue-data').first();
+
+			//Get the form action
+			this.action = $vueData.data('action') || '';
+			this.searchOnLoad = $vueData.data('search-on-load') || 0;
+
+			if(this.searchOnLoad) {
+				this.search();
+			}
+		},
 	});
 });

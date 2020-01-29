@@ -173,7 +173,8 @@ class DreamController extends BaseController
 		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
 		return $this->render('related', [
 			'canFilter' => true,
-			'formAction' => '/search/related/' . $id
+			'formAction' => '/search/related/' . $id,
+			'searchOnLoad' => 0
 		]);
 	}
 
@@ -185,6 +186,8 @@ class DreamController extends BaseController
      */
     public function actionView($id)
     {
+		$this->getScriptRegistrar()->registerScript(new Script('dream/dream-list.js'));
+
 		//Register dream comments
 		$this->getScriptRegistrar()->registerScript(
 			new Script('dream/comments.js')

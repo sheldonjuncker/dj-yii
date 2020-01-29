@@ -91,8 +91,8 @@
 	<hr>
 	<div class="row col-lg-12">
 		<div class="form-group">
-			<label>Similar Dreams</label>
 			<div>
+				<?=$this->renderFile('@app/views/dream/related.php', ['canFilter' => true, 'formAction' => '/search/related/' . $dream->getId(), 'searchOnLoad' => true])?>
 				<?php
 				echo '<ul>';
 				foreach($dream->findRelated() as $relatedDream)

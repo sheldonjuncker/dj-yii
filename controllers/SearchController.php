@@ -3,7 +3,10 @@
 namespace app\controllers;
 
 use app\components\gui\Breadcrumb;
+use app\models\dj\Dream;
 use app\models\search\DreamForm;
+use Rhumsaa\Uuid\Uuid;
+use yii\web\NotFoundHttpException;
 
 class SearchController extends BaseController
 {
@@ -63,28 +66,57 @@ class SearchController extends BaseController
 
 	public function actionRelated(string $id)
 	{
+		$dream = $this->findDream($id);
+
 		$dreamForm = new DreamForm();
 		$dreamForm->user_id = $this->getUser()->getId();
 		$dreamForm->load(\Yii::$app->request->get());
-		$dreamSearchResponse = $dreamForm->performSearch();
+
+		//Get all of the searched for results and filter by their IDs in the related dreams
+		$limit = $dreamForm->limit;
+		$page = $dreamForm->page;
+		$dreamForm->limit = 0;
+
+		$searchedDreams = $dreamForm->getDreams();
+		$searchedDreamIds = [];
+		foreach($searchedDreams as $searchedDream)
+		{
+			$searchedDreamIds[] = $searchedDream->getId();
+		}
+
+		//Find all of the related dreams
+		$filteredDreams = [];
+		foreach($dream->findRelated() as $relatedDream)
+		{
+			if(in_array($relatedDream->getId(), $searchedDreamIds))
+			{
+				$filteredDreams[] = $relatedDream;
+			}
+		}
+
 		$data = [
-			'total' => 0,
+			'total' => count($filteredDreams),
 			'results' => []
 		];
-		if($dreamSearchResponse->isSuccess())
+
+		$dreamData = [];
+
+		//Do the limit/offset in PHP...:(
+		if($limit > 0 && $limit < count($filteredDreams))
 		{
-			$dreamData = [];
-			foreach($dreamSearchResponse->getDreams() as $dream)
-			{
-				$dreamData[] = [
-					'id' => $dream->getId(),
-					'title' => $dream->getTitle(),
-					'date' => $dream->getFormattedDate()
-				];
-			}
-			$data['total'] = $dreamSearchResponse->total;
-			$data['results'] = $dreamData;
+			$page = intval($page);
+			$filteredDreams = array_slice($filteredDreams, ($page - 1) * $limit, $limit);
 		}
+
+		foreach($filteredDreams as $dream)
+		{
+			$dreamData[] = [
+				'id' => $dream->getId(),
+				'title' => $dream->getTitle(),
+				'date' => $dream->getFormattedDate()
+			];
+		}
+		$data['results'] = $dreamData;
 
 		return $this->asJson($data);
 	}
@@ -104,5 +136,15 @@ class SearchController extends BaseController
 		return $this->render('search', [
 			'dreams' => $dreams
 		]);
+	}
+
+	protected function findDream($id): Dream
+	{
+		$id = Uuid::fromString($id)->getBytes();
+		if (($model = Dream::findOne($id)) !== null) {
+			return $model;
+		}
+
+		throw new NotFoundHttpException('The requested page does not exist.');
 	}
 }
