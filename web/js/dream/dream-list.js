@@ -47,6 +47,13 @@ $(document).ready(function(){
 					return;
 				}
 
+				//Filter has changed, reset paging!
+				if(this.filter !== this.lastFilter) {
+					this.currentPage = 0;
+					this.totalPages = 1;
+					this.lastPage = null;
+				}
+
 				let self = this;
 				$.ajax({
 					url: '/search/list',
