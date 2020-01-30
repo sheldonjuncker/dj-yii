@@ -47,7 +47,7 @@ class Jung:
             params.append(search_term + "%")
 
         # Add in the main query to work on unioned data
-        sql = "(" + sql + "\n)";
+        sql = "(" + sql + "\n)"
         sql = """
 SELECT
     bin_to_uuid(z.dream_id) AS dream_id,

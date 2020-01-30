@@ -93,17 +93,6 @@
 		<div class="form-group">
 			<div>
 				<?=$this->renderFile('@app/views/dream/related.php', ['canFilter' => true, 'formAction' => '/search/related/' . $dream->getId(), 'searchOnLoad' => true])?>
-				<?php
-				echo '<ul>';
-				foreach($dream->findRelated() as $relatedDream)
-				{
-					if($dream->id !== $relatedDream->id)
-					{
-						echo '<li>' . $relatedDream->title . '</li>';
-					}
-				}
-				echo '</ul>';
-				?>
 			</div>
 		</div>
 	</div>
